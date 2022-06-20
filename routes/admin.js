@@ -4,6 +4,8 @@ const express = require('express');
 
 const router = express.Router();
 
+const products  = [];
+
 // /admin/add-product
 router.get('/add-product',(req, res, next) => {
     console.log("Sending add product page");
@@ -12,9 +14,11 @@ router.get('/add-product',(req, res, next) => {
 });
 
 router.post('/add-product',(req,res,next)=>{
-    console.log('redirecting');
-    console.log(req.body);
+    console.log('Product request Received. Redirecting to Shop Page..');
+    // console.log(req.body);
+    products.push({ title: req.body.title });
     res.redirect('/');
 });
 
-module.exports = router;
+exports.router = router;
+exports.products = products;
