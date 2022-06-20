@@ -10,7 +10,8 @@ const products  = [];
 router.get('/add-product',(req, res, next) => {
     console.log("Sending add product page");
     // res.send('<form action="/admin/add-product" method="POST"><input type="text" name="title"><input type="text" name="weight"><button type="submit">Add Product</button></form>');
-    res.sendFile(path.join(__dirname,'../','views','add-product.html'));
+    // res.sendFile(path.join(__dirname,'../','views','add-product.html'));
+    res.render('add-product',{pageTitle:"Admin - Add Product"});
 });
 
 router.post('/add-product',(req,res,next)=>{
