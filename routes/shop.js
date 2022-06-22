@@ -14,7 +14,15 @@ router.get("/", (req, res, next) => {
   products = adminData.products;
   console.log('shop.js=>',products);
   // res.sendFile(path.join(rootDir, 'views', 'shop.html'));
-  res.render('shop',{prods:products,pageTitle:'SHOP',path:'/'});
+  res.render("shop", {
+    prods: products,
+    pageTitle: "SHOP",
+    path: "/",
+    hasProducts: adminData.products.length > 0,
+    activeShop: true,
+    productCSS: true,
+    layout: "/layouts/main-layout"
+  });
 });
 
 module.exports = router;

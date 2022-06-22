@@ -59,7 +59,8 @@ main {
 }
 
 .card {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  box-shadow: 0 2px 8px #5a04fc;
+  margin:5px;
 }
 
 .card__header,
