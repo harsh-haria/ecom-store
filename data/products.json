@@ -1,7 +1,1 @@
-[
-  { "title": "Bottle", "price": "50" },
-  { "title": "Watch", "price": "650" },
-  { "title": "Pen", "price": "10" },
-  { "title": "Sanitizer", "price": "25" },
-  { "title": "Lotion", "price": "99" }
-]
+[{"title":"Deodorant","ImageUrl":"https://pngimg.com/uploads/deodorant/deodorant_PNG53.png","price":"329","details":"Dove Whitening (Original)"},{"title":"Coffee Beans","ImageUrl":"https://th.bing.com/th/id/OIP.9lGhwVWlLHyEq27nK8y--QHaE8?pid=ImgDet&rs=1","price":"150","details":"Arabica Coffee Beans. High Quality"},{"title":"Coffee Beans","ImageUrl":"https://i.pinimg.com/736x/79/a5/76/79a576e2737c7a0b36b6c78ddcf3af74.jpg","price":"197","details":"Imported Coffee beans"},{"title":"Tshirt","ImageUrl":"https://images.bewakoof.com/t1080/black-short-collar-tipping-polo-329863-1655817094-7.jpg","price":"240","details":"Polo T-shirt by Bewakoof.com"},{"title":"Men's Suit","ImageUrl":"https://happygentleman.com/wp-content/uploads/2019/11/mens-navy-blue-3-piece-wedding-suit.jpg","price":"11000","details":"Elegant Men's Suit for Wedding"}]

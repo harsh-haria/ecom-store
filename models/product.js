@@ -1,15 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const products = require('../controllers/products');
 
 const rootDir = require('../util/path');
 
-const p = path.join(path.dirname(require.main.filename),'data','products.json');
+const p = path.join(rootDir,'data','products.json');
 
 module.exports = class Products{
-    constructor(t,p){
-        this.title = t;
-        this.price = p;
+    constructor(title,ImageUrl,details,price){
+        this.title = title;
+        this.ImageUrl = ImageUrl;
+        this.price = price;
+        this.details = details;
     }
 
     save(){
