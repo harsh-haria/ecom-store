@@ -2,11 +2,21 @@
     width: 20rem;
     max-width: 90%;
     margin: auto;
+    display: block;
 }
 
 .product-item {
     width: 20rem;
     max-width: 95%;
+    margin-bottom: 1rem;
+
+}
+
+.product-image{
+    max-height: 22rem;
+    min-height: 22rem;
+    padding: 10px;
+    border-radius: 25px;
 }
 
 .product__title {

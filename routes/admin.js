@@ -11,7 +11,7 @@ router.get('/add-product',AdminController.getAddProductPage);
 
 router.post('/add-product',AdminController.postAddProductPage);
 
-router.get('/edit',AdminController.ProductEditor);
+router.get('/edit-product/:productId',AdminController.getEditProductPage);
 
 router.get('/products',AdminController.AdminProducts);
 
