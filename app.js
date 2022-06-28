@@ -1,5 +1,10 @@
-
+const fs = require('fs');
 const path = require('path');
+const rootDir = require('../Js/util/path');
+
+//erase the file containing cart so that it can start fresh with every single load
+// fs.unlinkSync(path.join(rootDir,'data','cart.json'));
+
 
 const express = require("express");
 const bodyParser = require('body-parser');
