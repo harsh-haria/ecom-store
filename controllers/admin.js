@@ -10,7 +10,7 @@ exports.getAddProductPage = (req, res, next) => {
 
 exports.postAddProductPage = (req, res, next) => {
   console.log("Product request Received. Redirecting to Shop Page..");
-  const product = new Product(null, req.body.title, req.body.image, req.body.details, req.body.price);
+  const product = new Product(req.body.title, req.body.image, req.body.details, req.body.price,null);
   product.save();
   res.redirect("/");
 };
