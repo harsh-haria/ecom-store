@@ -1,4 +1,11 @@
+const fs = require('fs');
+const path = require('path');
+
+const rootDir = require('../util/path');
+const p = path.join(rootDir,'data','products.json');
+
 const Product = require("../models/product");
+const { TIMEOUT } = require('dns');
 
 exports.getAddProductPage = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -40,7 +47,12 @@ exports.updateProduct = (req,res,next) => {
   // console.log(req.body);
   const UpdatedProduct = new Product(req.body.title, req.body.image, req.body.details, req.body.price,req.body.id,);
   UpdatedProduct.save();
-  res.redirect("/");
+  res.redirect("/products");
+};
+
+exports.postDeleteProduct = (req,res,next) => {
+  Product.deleteById(req.body.productId);
+  res.redirect('/admin/products');
 };
 
 exports.AdminProducts = (req, res, next) => {

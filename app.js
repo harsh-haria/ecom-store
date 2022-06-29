@@ -5,6 +5,16 @@ const rootDir = require('../Js/util/path');
 //erase the file containing cart so that it can start fresh with every single load
 // fs.unlinkSync(path.join(rootDir,'data','cart.json'));
 
+const db = require('./util/database');
+
+// db.execute('SELECT * FROM products')
+//     .then((result)=>{
+//         console.log(result[0],result[1]);
+//     })
+//     .catch((err)=>{
+//         console.log(err);
+//     });
+
 
 const express = require("express");
 const bodyParser = require('body-parser');

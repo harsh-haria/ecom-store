@@ -7,3 +7,4 @@
 input.txt
 /node_modules
 .gitignore
+/util/database.js
