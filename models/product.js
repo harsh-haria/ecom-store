@@ -1,11 +1,11 @@
-const db = require('../util/database')
+const db = require('../util/database');
 
 const Cart = require("./cart");
 
 module.exports = class Products {
-  constructor(title, ImageUrl, details, price, id) {
+  constructor(title, imageUrl, details, price, id) {
     this.title = title;
-    this.ImageUrl = ImageUrl;
+    this.imageUrl = ImageUrl;
     this.price = price;
     this.details = details;
     this.id = id;
@@ -13,7 +13,10 @@ module.exports = class Products {
 
   
   save(){
-
+    return db.execute(
+      'INSERT INTO products (title,imageUrl,price,details) VALUES (?,?,?,?)',
+      [this.title,this.ImageUrl,this.price,this.details]
+    );
   }
 
 
@@ -23,7 +26,8 @@ module.exports = class Products {
   
 
   static fetchAll() {
-    return db.execute("SELECT * FROM products");
+    console.log('reached fetch all inside product');
+    return db.execute('select * from products');
   }
 
 

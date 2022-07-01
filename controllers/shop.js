@@ -3,13 +3,18 @@ const Cart = require("../models/cart");
 const Products = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
-  items.fetchAll((listOfProducts) => {
-    res.render("shop/product-list", {
-      product: listOfProducts,
-      pageTitle: "All Products",
-      path: "/products"
+    items.fetchAll()
+    .then(([data])=>{
+      console.log(data);
+      res.render("shop/product-list", {
+        product: data[0],
+        pageTitle: "All Products",
+        path: "/products"
+      });
+    })
+    .catch((err)=>{
+      console.log(err);
     });
-  });
 };
 
 exports.getProduct = (req,res,next) => {
@@ -74,13 +79,17 @@ exports.getCheckoutPage = (req, res, next) => {
 };
 
 exports.getIndexPage = (req, res, next) => {
-  items.fetchAll((listOfProducts) => {
-    res.render("shop/index", {
-      product: listOfProducts,
-      pageTitle: "Home",
-      path: "/"
+  items.fetchAll()
+    .then(([data])=>{
+      res.render("shop/index", {
+        product: data,
+        pageTitle: "Home",
+        path: "/"
+      });
+    })
+    .catch((err)=>{
+      console.log(err);
     });
-  });
 };
 
 exports.getProductDetails = (req, res, next) => {

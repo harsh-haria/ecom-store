@@ -5,7 +5,7 @@ const rootDir = require('../util/path');
 const p = path.join(rootDir,'data','products.json');
 
 const Product = require("../models/product");
-const { TIMEOUT } = require('dns');
+const { compileClientWithDependenciesTracked } = require('pug');
 
 exports.getAddProductPage = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -18,8 +18,13 @@ exports.getAddProductPage = (req, res, next) => {
 exports.postAddProductPage = (req, res, next) => {
   console.log("Product request Received. Redirecting to Shop Page..");
   const product = new Product(req.body.title, req.body.image, req.body.details, req.body.price,null);
-  product.save();
-  res.redirect("/");
+  product.save()
+  .then(()=>{
+    res.redirect("/");
+  })
+  .catch(err=>{
+    console.log(err);
+  });
 };
 
 exports.getEditProductPage = (req, res, next) => {
@@ -45,7 +50,7 @@ exports.getEditProductPage = (req, res, next) => {
 
 exports.updateProduct = (req,res,next) => {
   // console.log(req.body);
-  const UpdatedProduct = new Product(req.body.title, req.body.image, req.body.details, req.body.price,req.body.id,);
+  const UpdatedProduct = new Product(req.body.title, req.body.image, req.body.details, req.body.price,req.body.id);
   UpdatedProduct.save();
   res.redirect("/products");
 };
@@ -56,13 +61,19 @@ exports.postDeleteProduct = (req,res,next) => {
 };
 
 exports.AdminProducts = (req, res, next) => {
-  Product.fetchAll((listOfProducts) => {
-    res.render("admin/products", {
-      prods: listOfProducts,
-      pageTitle: "All Products",
-      path: "/admin/products"
+  console.log('inside the admin products exports section');
+  Product.fetchAll()
+    .then(([data])=>{
+      res.render("admin/products", {
+        prods: data,
+        pageTitle: "All Products",
+        path: "/admin/products"
+      });
+    })
+    .catch((err)=>{
+      console.log(err);
     });
-  });
+  
 };
 
 
