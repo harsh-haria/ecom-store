@@ -1,39 +1,31 @@
-const db = require('../util/database');
+const { SequelizeScopeError } = require('sequelize');
+const Sequelize = require('sequelize');
 
-const Cart = require("./cart");
+const sequelize = require('../util/db.js');
 
-module.exports = class Products {
-  constructor(title, imageUrl, details, price, id) {
-    this.title = title;
-    this.imageUrl = ImageUrl;
-    this.price = price;
-    this.details = details;
-    this.id = id;
-  }
+const Product = sequelize.define('product',{
+    id:{
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        allowNull: false,
+        primaryKey: true
+    },
+    title:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    price:{
+        type: Sequelize.DOUBLE,
+        allowNull: false
+    },
+    imageUrl:{
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    details:{
+        type: Sequelize.STRING,
+        allowNull: false
+    }
+});
 
-  
-  save(){
-    return db.execute(
-      'INSERT INTO products (title,imageUrl,price,details) VALUES (?,?,?,?)',
-      [this.title,this.ImageUrl,this.price,this.details]
-    );
-  }
-
-
-  static deleteById(id){
-
-  }
-  
-
-  static fetchAll() {
-    console.log('reached fetch all inside product');
-    return db.execute('select * from products');
-  }
-
-
-  static findById(id) {
-
-  }
-
-
-};
+module.exports = Product;

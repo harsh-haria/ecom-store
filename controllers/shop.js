@@ -4,10 +4,9 @@ const Products = require("../models/product");
 
 exports.getProducts = (req, res, next) => {
     items.fetchAll()
-    .then(([data])=>{
-      console.log(data);
+    .then(([data,metadata])=>{
       res.render("shop/product-list", {
-        product: data[0],
+        product: data,
         pageTitle: "All Products",
         path: "/products"
       });

@@ -5,7 +5,7 @@ const rootDir = require('../Js/util/path');
 //erase the file containing cart so that it can start fresh with every single load
 // fs.unlinkSync(path.join(rootDir,'data','cart.json'));
 
-const db = require('./util/database');
+const sequelize = require('./util/db');
 
 // db.execute('SELECT * FROM products')
 //     .then((result)=>{
@@ -58,7 +58,16 @@ app.use(shopRoutes);
 
 app.use(ErrorController.errorPage);
 
+sequelize
+  .sync()
+  .then((result) => {
+    // console.log(result);
+    app.listen(3000); // start the server only if we reach here
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+
 // const server = http.createServer(app);
 // server.listen(3000);
 
-app.listen(3000);
