@@ -7,6 +7,12 @@ const rootDir = require('../Js/util/path');
 
 const sequelize = require('./util/db');
 
+const Product = require('./models/product');
+const User = require('./models/user');
+const Cart = require('./models/cart');
+const CartItem = require('./models/cart-item');
+
+
 // db.execute('SELECT * FROM products')
 //     .then((result)=>{
 //         console.log(result[0],result[1]);
@@ -52,17 +58,53 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname,'public'))); //we can add multiple static folders
 // the app will go through all the folders until it hits the first file which is needed
 
+app.use( (req,res,next) => {
+  User.findByPk(1)
+    .then(user => {
+      req.user = user; //here we are storing a sequelize object not a json object
+      //that means we also have the access to the methods of the sequelize lib like destroy
+      next();
+    })
+    .catch((err) => console.log(err));
+});
+
 app.use('/admin',adminRoutes);
 
 app.use(shopRoutes);
 
 app.use(ErrorController.errorPage);
 
+//Associations
+Product.belongsTo(User,{constraints: true, onDelete: 'CASCADE' });
+User.hasMany(Product);
+
+User.hasOne(Cart);
+Cart.belongsTo(User); //optional. Similar to the above statement
+Cart.belongsToMany(Product,{ through: CartItem });
+Product.belongsToMany(Cart,{ through: CartItem });
+
+
 sequelize
+  // .sync({ force: true }) //commented this out because we dont want to overwrite the data in base everytime
   .sync()
   .then((result) => {
     // console.log(result);
-    app.listen(3000); // start the server only if we reach here
+    // app.listen(3000); // start the server only if we reach here
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if(!user){
+      User.create({ name:'harsh', email:'abc@test.com' });
+    }
+    return user;
+    // return Promise.resolve(user); //can be done this way as well
+  })
+  .then((user)=>{
+    return user.createCart();
+  })
+  .then((user)=>{
+    // console.log(user);
+    app.listen(3000);
   })
   .catch((err) => {
     console.log(err);

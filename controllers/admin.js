@@ -16,12 +16,15 @@ exports.getAddProductPage = (req, res, next) => {
 };
 
 exports.postAddProductPage = (req, res, next) => {
-  Product.create({
+  req.user
+  .createProduct({ //this is a magic function created by sequelize.
+    //create product has been made because we created associations with 'belongsTo' and 
     title: req.body.title,
     imageUrl: req.body.imageUrl,
     price: req.body.price,
-    details: req.body.details
-  }).then(result =>{
+    details: req.body.details,
+  })
+  .then(result =>{
     // console.log(result);
     console.log('Product creation complete');
     res.redirect('/admin/products');
@@ -37,8 +40,13 @@ exports.getEditProductPage = (req, res, next) => {
     return res.redirect('/');
   }
   const productId = req.params.productId;
-  Product.findByPk(productId)
-    .then(product => {
+  req.user.getProducts({
+    where:{
+      id:productId
+    }
+  })
+  .then(products => {
+    let product = products[0];
     if(!product){
       console.log('no product found');
       return res.redirect('/');
@@ -97,19 +105,18 @@ exports.postDeleteProduct = (req,res,next) => {
 };
 
 exports.AdminProducts = (req, res, next) => {
-  console.log('inside the admin products exports section');
-  Product.findAll()
+  req.user
+    .getProducts()
     .then(data=>{
       res.render("admin/products", {
         prods: data,
-        pageTitle: "All Products",
+        pageTitle: "Admin Products",
         path: "/admin/products"
       });
     })
     .catch((err)=>{
       console.log(err);
     });
-  
 };
 
 
