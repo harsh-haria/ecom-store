@@ -2,24 +2,27 @@
 </head>
 <body>
     <%- include('../includes/navigation.ejs') %>
-    <% if(prods.length>0){%>
-    <ul>
-        <%for(let p of prods){%>
-        <li>
-            Product: <%= p.productData.title %> <br>
-            Price: <%= p.productData.price %> <br>
-            Quantity: <%= p.quantity %>
-            <div>
-                <form action="/delete-item-cart" method="post">
-                    <input type="hidden" name="productId" value ="<%=p.productData.id%>">
-                    <button type="submit" class="btn">Delete</button>
-                </form>
-            </div>
-        </li>
-        <br>
+    <main>
+        <% if(prods.length>0){%>
+            <ul class="cart__item-list">
+                <%for(let p of prods){%>
+                <li class="card product-item card__content">
+                    Product: <%= p.title %> <br>
+                    Price: <%= p.price %> <br>
+                    Quantity: <%= p.cartItem.quantity %>
+                    <div>
+                        <form action="/delete-item-cart" method="post">
+                            <input type="hidden" name="productId" value ="<%=p.id%>">
+                            <button type="submit" class="btn">Delete</button>
+                        </form>
+                    </div>
+                </li>
+                <br>
+                <% } %>
+            </ul>
+        <% } else{ %>
+            <h1>Cart Empty! Continue Shopping</h1>
         <% } %>
-    </ul>
-    <% } else{ %>
-        <h1>Cart Empty! Continue Shopping</h1>
-    <% } %>
+    </main>
+    
 <%- include('../includes/end.ejs') %>

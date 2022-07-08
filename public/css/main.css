@@ -163,6 +163,10 @@ form {
   padding: 1rem;
 }
 
+ul {
+  list-style-type: none;
+}
+
 .card__header h1,
 .card__content h1,
 .card__content h2,
