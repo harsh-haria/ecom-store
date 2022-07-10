@@ -11,15 +11,8 @@ const Product = require('./models/product');
 const User = require('./models/user');
 const Cart = require('./models/cart');
 const CartItem = require('./models/cart-item');
-
-
-// db.execute('SELECT * FROM products')
-//     .then((result)=>{
-//         console.log(result[0],result[1]);
-//     })
-//     .catch((err)=>{
-//         console.log(err);
-//     });
+const Order = require('./models/order');
+const OrderItem = require('./models/order-item');
 
 
 const express = require("express");
@@ -29,15 +22,12 @@ const bodyParser = require('body-parser');
 // const server = http.createServer(routes.handler);
 
 
-
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const ErrorController = require('./controllers/error');
 
 const app = express();
-
-
 
 //for pug
 // app.set('view engine','pug');
@@ -53,10 +43,10 @@ app.set('view engine','ejs');
 app.set('views','views');
 
 
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname,'public'))); //we can add multiple static folders
 // the app will go through all the folders until it hits the first file which is needed
+
 
 app.use( (req,res,next) => {
   User.findByPk(1)
@@ -83,33 +73,30 @@ Cart.belongsTo(User); //optional. Similar to the above statement
 Cart.belongsToMany(Product,{ through: CartItem });
 Product.belongsToMany(Cart,{ through: CartItem });
 
+Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
+
 
 sequelize
-  // .sync({ force: true }) //commented this out because we dont want to overwrite the data in base everytime
+  // .sync({ force: true })
   .sync()
-  .then((result) => {
-    // console.log(result);
-    // app.listen(3000); // start the server only if we reach here
+  .then(result => {
     return User.findByPk(1);
   })
-  .then((user) => {
-    if(!user){
-      User.create({ name:'harsh', email:'abc@test.com' });
+  .then(user => {
+    if (!user) {
+      return User.create({ name: 'harsh', email: 'harsh@test.com' });
     }
     return user;
-    // return Promise.resolve(user); //can be done this way as well
   })
-  .then((user)=>{
+  .then(user => {
+    // console.log(user);
     return user.createCart();
   })
-  .then((user)=>{
-    // console.log(user);
+  .then(cart => {
     app.listen(3000);
   })
-  .catch((err) => {
+  .catch(err => {
     console.log(err);
   });
-
-// const server = http.createServer(app);
-// server.listen(3000);
-

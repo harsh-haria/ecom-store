@@ -1,10 +1,8 @@
-const items = require("../models/product");
-const Cart = require("../models/cart");
-const Products = require("../models/product");
 const Product = require("../models/product");
+const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
-  items
+  Product
     .findAll()
     .then((data) => {
       res.render("shop/product-list", {
@@ -35,7 +33,7 @@ exports.getProduct = (req, res, next) => {
   //   });
 
   //option 2
-  Products.findAll({
+  Product.findAll({
     where:{
       id:prodId
     }
@@ -53,27 +51,6 @@ exports.getProduct = (req, res, next) => {
 };
 
 exports.getCartItems = (req, res, next) => {
-  // Cart.getCart((cart) => {
-  //   Products.fetchAll((products) => {
-  //     let cartProducts = [];
-  //     for (let product of products) {
-  //       const cartProductData = cart.products.find(
-  //         (prod) => prod.id === product.id
-  //       );
-  //       if (cartProductData) {
-  //         cartProducts.push({
-  //           productData: product,
-  //           quantity: cartProductData.qty,
-  //         });
-  //       }
-  //     }
-  //     res.render("shop/cart", {
-  //       pageTitle: "Your Cart",
-  //       path: "/cart",
-  //       prods: cartProducts,
-  //     });
-  //   });
-  // });
   req.user
     .getCart()
     .then(cart => {
@@ -93,7 +70,6 @@ exports.getCartItems = (req, res, next) => {
 
 exports.postCartDeleteProduct = (req, res, post) => {
   const prodId = req.body.productId;
-  
   req.user
     .getCart()
     .then(cart => {
@@ -107,10 +83,6 @@ exports.postCartDeleteProduct = (req, res, post) => {
       res.redirect('/cart');
     })
     .catch(err => console.log(err));
-    // Products.findById(prodId, (product) => {
-    //   Cart.deleteProduct(prodId, product.price);
-    //   res.redirect("/cart");
-    // });
 };
 
 exports.postCart = (req, res, next) => {
@@ -146,21 +118,53 @@ exports.postCart = (req, res, next) => {
 };
 
 exports.getOrders = (req, res, next) => {
-  res.render("shop/orders", {
-    pageTitle: "Your Orders",
-    path: "/orders",
-  });
+  req.user
+    .getOrders({include: ['products']}) //eager loading
+    //this along with orders also fetches the products
+    //this gives back an array where it also includes products per order
+    //this works because of the relations we have in our app.js file
+    .then(orders => {
+      res.render("shop/orders", {
+        pageTitle: "Your Orders",
+        path: "/orders",
+        orders: orders
+      });
+    })
+    .catch((err) => console.log(err));
 };
 
-exports.getCheckoutPage = (req, res, next) => {
-  res.render("shop/checkout", {
-    pageTitle: "Checkout",
-    path: "/checkout",
-  });
+exports.postOrder = (req, res, next) => {
+  let fetchedCart;
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts();
+    })
+    .then(products => {
+      return req.user
+        .createOrder()
+        .then(order => {
+          return order.addProducts(
+            products.map(product => {
+              product.orderItem = {quantity: product.cartItem.quantity};
+              return product;
+            })
+          );
+        })
+        .catch((err) => console.log(err));
+    })
+    .then(result => {
+      return fetchedCart.setProducts(null);
+    })
+    .then(result => {
+      res.redirect('/orders');
+    })
+    .catch((err) => console.log(err));
 };
 
 exports.getIndexPage = (req, res, next) => {
-  items
+  Product
     .findAll()
     .then((data) => {
       res.render("shop/index", {
