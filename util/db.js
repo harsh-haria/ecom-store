@@ -15,7 +15,7 @@
 const Sequelize = require('sequelize');
 
 // const sequelize = new Sequelize
-const sequelize = new Sequelize('node-complete','rootuser','PassRoot!123',{
+const sequelize = new Sequelize('node-complete','<Enter username here>','< Enter your password here >',{
     host: 'localhost',
     dialect: 'mysql'
 });

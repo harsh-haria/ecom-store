@@ -8,3 +8,4 @@ input.txt
 /node_modules
 .gitignore
 /util/database.js
+temp_acc.txt

@@ -3,7 +3,7 @@ const Cart = require('../models/cart');
 
 exports.getProducts = (req, res, next) => {
   Product
-    .findAll()
+    .fetchAll()
     .then((data) => {
       res.render("shop/product-list", {
         product: data,
@@ -33,16 +33,12 @@ exports.getProduct = (req, res, next) => {
   //   });
 
   //option 2
-  Product.findAll({
-    where:{
-      id:prodId
-    }
-  })
+  Product.findById(prodId)
     .then(products => {
       res.render("shop/product-detail", {
-        pageTitle: products[0].title, 
+        pageTitle: products.title, 
         path: "/product-details",
-        product: products[0] //where clause sends an array so we have to select first element of the array
+        product: products //where clause sends an array so we have to select first element of the array
       });
     })
     .catch((err) => {
@@ -165,7 +161,7 @@ exports.postOrder = (req, res, next) => {
 
 exports.getIndexPage = (req, res, next) => {
   Product
-    .findAll()
+    .fetchAll()
     .then((data) => {
       res.render("shop/index", {
         product: data,
@@ -178,9 +174,3 @@ exports.getIndexPage = (req, res, next) => {
     });
 };
 
-exports.getProductDetails = (req, res, next) => {
-  res.render("shop/product-detail", {
-    pageTitle: "Product Details",
-    path: "/product-details",
-  });
-};

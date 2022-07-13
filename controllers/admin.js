@@ -5,7 +5,6 @@ const rootDir = require('../util/path');
 const p = path.join(rootDir,'data','products.json');
 
 const Product = require("../models/product");
-const { TIMEOUT } = require('dns');
 
 exports.getAddProductPage = (req, res, next) => {
   res.render("admin/edit-product", {
@@ -16,14 +15,9 @@ exports.getAddProductPage = (req, res, next) => {
 };
 
 exports.postAddProductPage = (req, res, next) => {
-  req.user
-  .createProduct({ //this is a magic function created by sequelize.
-    //create product has been made because we created associations with 'belongsTo' and 
-    title: req.body.title,
-    imageUrl: req.body.imageUrl,
-    price: req.body.price,
-    details: req.body.details,
-  })
+  const product = new Product(req.body.title, req.body.imageUrl, req.body.price, req.body.details);
+  product
+  .save()
   .then(result =>{
     // console.log(result);
     console.log('Product creation complete');
@@ -33,90 +27,88 @@ exports.postAddProductPage = (req, res, next) => {
   })
 };
 
-exports.getEditProductPage = (req, res, next) => {
-  const editMode = req.query.edit;
-  if(!editMode){
-    console.log('no edit mode found');
-    return res.redirect('/');
-  }
-  const productId = req.params.productId;
-  req.user.getProducts({
-    where:{
-      id:productId
-    }
-  })
-  .then(products => {
-    let product = products[0];
-    if(!product){
-      console.log('no product found');
-      return res.redirect('/');
-    }
-    res.render("admin/edit-product", {
-      pageTitle: "Admin - Edit Product",
-      path: "/admin/edit-product",
-      editing: editMode,
-      product: product
-    });
-  })
-  .catch(err => {
-    console.log(err);
-  });
-};
+// exports.getEditProductPage = (req, res, next) => {
+//   const editMode = req.query.edit;
+//   if(!editMode){
+//     console.log('no edit mode found');
+//     return res.redirect('/');
+//   }
+//   const productId = req.params.productId;
+//   req.user.getProducts({
+//     where:{
+//       id:productId
+//     }
+//   })
+//   .then(products => {
+//     let product = products[0];
+//     if(!product){
+//       console.log('no product found');
+//       return res.redirect('/');
+//     }
+//     res.render("admin/edit-product", {
+//       pageTitle: "Admin - Edit Product",
+//       path: "/admin/edit-product",
+//       editing: editMode,
+//       product: product
+//     });
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+// };
 
-exports.updateProduct = (req,res,next) => {
-  Product.findByPk(req.body.id)
-    .then(products => {
-      products.title = req.body.title;
-      products.imageUrl = req.body.imageUrl;
-      products.price = req.body.price;
-      products.details = req.body.details;
-      return products.save();
-    })
-    .then(result => {
-      console.log('Product with id:'+req.body.id+' was updated');
-      res.redirect("/products");
-    })
-    .catch(err => {
-      console.log(err);
-    });
-};
+// exports.updateProduct = (req,res,next) => {
+//   Product.findByPk(req.body.id)
+//     .then(products => {
+//       products.title = req.body.title;
+//       products.imageUrl = req.body.imageUrl;
+//       products.price = req.body.price;
+//       products.details = req.body.details;
+//       return products.save();
+//     })
+//     .then(result => {
+//       console.log('Product with id:'+req.body.id+' was updated');
+//       res.redirect("/products");
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// };
 
-exports.postDeleteProduct = (req,res,next) => {
-  //option1 
-  // Product.destroy({
-  //   where:{
-  //     id: req.body.productId
-  //   }
-  // });
-  // res.redirect('/admin/products');
+// exports.postDeleteProduct = (req,res,next) => {
+//   //option1 
+//   // Product.destroy({
+//   //   where:{
+//   //     id: req.body.productId
+//   //   }
+//   // });
+//   // res.redirect('/admin/products');
 
 
-  //option 2
-  Product.findByPk(req.body.productId)
-    .then(products =>{
-      return products.destroy();
-    })
-    .then(result => {
-      console.log('Product with id:'+req.body.productId+ ' has been deleted');
-      res.redirect('/admin/products');
-    })
-    .catch(err => console.log(err));
+//   //option 2
+//   Product.findByPk(req.body.productId)
+//     .then(products =>{
+//       return products.destroy();
+//     })
+//     .then(result => {
+//       console.log('Product with id:'+req.body.productId+ ' has been deleted');
+//       res.redirect('/admin/products');
+//     })
+//     .catch(err => console.log(err));
   
-};
+// };
 
-exports.AdminProducts = (req, res, next) => {
-  req.user
-    .getProducts()
-    .then(data=>{
-      res.render("admin/products", {
-        prods: data,
-        pageTitle: "Admin Products",
-        path: "/admin/products"
-      });
-    })
-    .catch((err)=>{
-      console.log(err);
-    });
-};
-
-
+// exports.AdminProducts = (req, res, next) => {
+//   req.user
+//     .getProducts()
+//     .then(data=>{
+//       res.render("admin/products", {
+//         prods: data,
+//         pageTitle: "Admin Products",
+//         path: "/admin/products"
+//       });
+//     })
+//     .catch((err)=>{
+//       console.log(err);
+//     });
+// };
