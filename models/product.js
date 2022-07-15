@@ -3,22 +3,32 @@ const mongodb = require('mongodb');
 const getDb = require('../util/database').getDb;
 
 class Product{
-    constructor(title, imageUrl, price, details){
+    constructor(title, imageUrl, price, details,id, userId){
         this.title = title;
         this.imageUrl = imageUrl;
         this. price = price;
         this.details = details;
+        this._id = id ? new mongodb.ObjectId(id): null;
+        this.userId = userId;
     }
 
     save(){
-        const db = getDb();
-        return db.collection("products")
-          .insertOne(this)
-          .then(result => {
-            console.log('printing the result inside save');
-            console.log(result);
-          })
-          .catch((err) => console.log(err));
+      const db = getDb();
+      let dbOp;
+      if(this._id){
+        //update product
+        dbOp = db
+          .collection("products")
+          .updateOne({ _id: this._id }, { $set: this });
+      }
+      else{
+        dbOp =  db.collection("products").insertOne(this);
+      }
+      return dbOp
+        .then(result => {
+          console.log(result);
+        })
+        .catch((err) => console.log(err));
     }
 
     static fetchAll(){
@@ -27,7 +37,7 @@ class Product{
           .find()
           .toArray()
           .then(products=>{
-            console.log(products);
+            // console.log(products);
             return products;
           })
           .catch((err) => console.log(err));
@@ -39,10 +49,22 @@ class Product{
           .find({ _id: new mongodb.ObjectId(prodId) })
           .next()
           .then(products => {
-            console.log(products);
+            // console.log(products);
             return products;
           })
           .catch((err) => console.log(err));
+    }
+
+    static deleteById(prodId){
+      const db = getDb();
+      return db.collection("products")
+        .deleteOne({ _id: new mongodb.ObjectId(prodId) })
+        .then(result => {
+          console.log(result);
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
 };
 

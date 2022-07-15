@@ -9,10 +9,10 @@
                 <li class="card product-item card__content">
                     Product: <%= p.title %> <br>
                     Price: <%= p.price %> <br>
-                    Quantity: <%= p.cartItem.quantity %>
+                    Quantity: <%= p.quantity %>
                     <div>
                         <form action="/delete-item-cart" method="post">
-                            <input type="hidden" name="productId" value ="<%=p.id%>">
+                            <input type="hidden" name="productId" value ="<%=p._id%>">
                             <button type="submit" class="btn">Delete</button>
                         </form>
                     </div>

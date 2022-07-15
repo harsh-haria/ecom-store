@@ -10,6 +10,7 @@ const shopRoutes = require('./routes/shop');
 
 const ErrorController = require('./controllers/error');
 const mongoConnect = require('./util/database').mongoConnect;
+const User = require('./models/user'); 
 
 const app = express();
 
@@ -25,14 +26,12 @@ app.use(express.static(path.join(__dirname,'public'))); //we can add multiple st
 
 
 app.use( (req,res,next) => {
-  // User.findByPk(1)
-  //   .then(user => {
-  //     req.user = user; //here we are storing a sequelize object not a json object
-  //     //that means we also have the access to the methods of the sequelize lib like destroy
-  //     next();
-  //   })
-  //   .catch((err) => console.log(err));
-  next();
+  User.findById('62d0610ef0e191f4869059ff')
+    .then(user => {
+      req.user = new User(user.username, user.email, user.address, user.cart, user._id);
+      next();
+    })
+    .catch((err) => console.log(err));
 });
 
 app.use('/admin',adminRoutes);
