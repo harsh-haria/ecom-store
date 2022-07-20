@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const path = require('path');
 
+const uris = require('./util/database');
 
 const express = require("express");
 const bodyParser = require('body-parser');
@@ -9,7 +11,7 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const ErrorController = require('./controllers/error');
-const mongoConnect = require('./util/database').mongoConnect;
+// const mongoConnect = require('./util/database').mongoConnect;
 const User = require('./models/user'); 
 
 const app = express();
@@ -26,9 +28,9 @@ app.use(express.static(path.join(__dirname,'public'))); //we can add multiple st
 
 
 app.use( (req,res,next) => {
-  User.findById('62d0610ef0e191f4869059ff')
+  User.findById('62d59f090172cae06c4d5192')
     .then(user => {
-      req.user = new User(user.username, user.email, user.address, user.cart, user._id);
+      req.user = user;
       next();
     })
     .catch((err) => console.log(err));
@@ -40,6 +42,24 @@ app.use(shopRoutes);
 
 app.use(ErrorController.errorPage);
 
-mongoConnect(() => {
-  app.listen(3000);
-});
+mongoose
+  .connect(uris.uri)
+  .then(result => {
+    console.log('connected!');
+
+    User.findOne().then(user => {
+      if(!user){
+        const user = new User({
+          name:'Harsh Haria',
+          email: 'harsh@test.com',
+          address: 'Mumbai',
+          cart: {
+            items: []
+          }
+        })
+        user.save();
+      }
+    });
+    app.listen(3000);
+  })
+  .catch((err) => console.log(err));

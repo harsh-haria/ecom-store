@@ -7,12 +7,12 @@
             <ul class="cart__item-list">
                 <%for(let p of prods){%>
                 <li class="card product-item card__content">
-                    Product: <%= p.title %> <br>
-                    Price: <%= p.price %> <br>
+                    Product: <%= p.productId.title %> <br>
+                    Price: <%= p.productId.price %> <br>
                     Quantity: <%= p.quantity %>
                     <div>
                         <form action="/delete-item-cart" method="post">
-                            <input type="hidden" name="productId" value ="<%=p._id%>">
+                            <input type="hidden" name="productId" value ="<%=p.productId._id%>">
                             <button type="submit" class="btn">Delete</button>
                         </form>
                     </div>
