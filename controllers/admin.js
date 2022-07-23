@@ -13,6 +13,7 @@ exports.AdminProducts = (req, res, next) => {
         prods: data,
         pageTitle: "Admin Products",
         path: "/admin/products",
+        isAuthenticated: req.session.isLoggedIn
       });
     })
     .catch((err) => {
@@ -24,7 +25,8 @@ exports.getAddProductPage = (req, res, next) => {
   res.render("admin/edit-product", {
     pageTitle: "Admin - Add Product",
     path: "/admin/add-product",
-    editing: false
+    editing: false,
+    isAuthenticated: req.session.isLoggedIn
   });
 };
 
@@ -40,7 +42,6 @@ exports.postAddProductPage = (req, res, next) => {
   product
     .save()
     .then(result =>{
-      // console.log(result);
       console.log('Product creation complete');
       res.redirect('/admin/products');
     })
@@ -67,7 +68,8 @@ exports.getEditProductPage = (req, res, next) => {
       pageTitle: "Admin - Edit Product",
       path: "/admin/edit-product",
       editing: editMode,
-      product: product
+      product: product,
+      isAuthenticated: req.session.isLoggedIn
     });
   })
   .catch(err => {

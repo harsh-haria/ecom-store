@@ -14,17 +14,18 @@ Procedure to run the project:
   c) Replace the '/test' at the end of the link to '/shop'.<br>
   d) Replace the '<password>' in the link with the password which you had assigned while spinning up the server. <br>
   e) Back to the home page of MongoDB cloud. Under Security, Click on 'Network Access'. After that you should see 'ADD IP ADDRESS' button. Click on it and then click on 'Add this Computer's IP' button and hit 'Confirm'.<br>
-  f) Create a file 'database.js' in utils folder and paste the code below in that file along with your link and then save it.<br><p><em>
-  module.exports = {<br>
-  &emsp; uri: '<your_link_will_go_here>'<br>
-};</em></p>
-  g) Now you can connect to the database via this application.<br>
-  
+  f) Create a file 'database.js' in 'util' folder and paste the code below in that file along with your link and then save it. After that you will be able to connect to the database via this application.
+```javascript
+      module.exports = {
+        uri: '<your_link_will_go_here>'
+      };
+```
 4) Run command 'npm start' to start the server.
+
 
 5) You can now access the website on 'localhost:3000'. If you are running the project for the first time. There are no products saved yet. So go ahead and save some products to use all other functionality of the website.<br>
 
 6) To check what the data looks like in the database, Go to the newly installed Atlas and follow the steps below.<br>
-  a) Open the newly installed MongoDB Atlas and click on 'New Connection+' button on top left.<br>
+  a) Open the MongoDB Atlas and click on 'New Connection+' button on top left.<br>
   b) Enter the stored Link in the 'URI' section and click on connect.<br>
   c) If you have added some products into the database you will see 'shops' in the menu on the left side. Click on it to explore the different collections we have inserted in the database.<br>
