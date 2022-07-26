@@ -1,9 +1,3 @@
-const mongodb = require('mongodb');
-const path = require('path');
-
-const rootDir = require('../util/path');
-const p = path.join(rootDir,'data','products.json');
-
 const Product = require("../models/product");
 
 exports.AdminProducts = (req, res, next) => {
@@ -22,6 +16,9 @@ exports.AdminProducts = (req, res, next) => {
 };
 
 exports.getAddProductPage = (req, res, next) => {
+  if(!req.session.isLoggedIn){
+    return res.redirect('/login');
+  }
   res.render("admin/edit-product", {
     pageTitle: "Admin - Add Product",
     path: "/admin/add-product",

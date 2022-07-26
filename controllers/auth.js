@@ -1,30 +1,85 @@
-const User = require('../models/user');
-exports.getLogin = (req,res,next) => {
-    res.render("auth/login", {
-      pageTitle: "Login",
-      path: "/login",
-      isAuthenticated: false
-    });
-}
+const User = require("../models/user");
+const bcrypt = require("bcryptjs");
 
-exports.postLogin = (req,res,next)=>{
-  // res.setHeader('Set-Cookie','loggedIn=true');
-  User.findById('62d59f090172cae06c4d5192')
-  .then(user => {
-    req.session.user = user;
-    req.session.isLoggedIn = true;
-    req.session.save((err)=>{
-      console.log(err);
-    }); //mongodb might take some miliseconds to update.
-    //this helps us to hold operations until everything is saved and only then redirect
-    res.redirect('/');
-  })
-  .catch((err) => console.log(err));
-}
-
-exports.postLogout = (req,res,next)=>{
-  req.session.destroy(err => {
-    console.log(err);
-    res.redirect('/');
+exports.getLogin = (req, res, next) => {
+  res.render("auth/login", {
+    pageTitle: "Login",
+    path: "/login",
+    isAuthenticated: false,
+    csrfToken: req.csrfToken()
   });
-}
+};
+
+exports.postLogin = (req, res, next) => {
+  // res.setHeader('Set-Cookie','loggedIn=true');
+  const email = req.body.email;
+  const password = req.body.password;
+  
+  User.findOne({ email: email })
+    .then((user) => {
+      if (!user) {
+        return res.redirect("/login");
+      }
+      bcrypt
+        .compare(password, user.password)
+        .then((doMatch) => {
+          if (doMatch) {
+            req.session.user = user;
+            req.session.isLoggedIn = true;
+            return req.session.save((err) => {
+              //mongodb might take some miliseconds to update.
+              //this helps us to hold operations until everything is saved and only then redirect
+              console.log(err);
+              res.redirect("/");
+            });
+          }
+          return res.redirect("/login");
+        })
+        .catch((err) => console.log(err));
+    })
+    .catch((err) => console.log(err));
+};
+
+exports.postLogout = (req, res, next) => {
+  req.session.destroy((err) => {
+    console.log(err);
+    res.redirect("/");
+  });
+};
+
+exports.getSignup = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Signup",
+    isAuthenticated: false,
+  });
+};
+
+exports.postSignup = (req, res, next) => {
+  const email = req.body.email;
+  const address = req.body.address;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+  User.findOne({ email: email })
+    .then((userDoc) => {
+      if (userDoc) {
+        return res.redirect("/signup");
+      }
+      return bcrypt
+        .hash(password, 12)
+        .then((hashedPassword) => {
+          const user = new User({
+            email: email,
+            password: hashedPassword,
+            address: address,
+            cart: { items: [] },
+          });
+          return user.save();
+        })
+        .then((result) => {
+          res.redirect("/login");
+        });
+    })
+
+    .catch((err) => console.log(err));
+};

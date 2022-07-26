@@ -2,10 +2,7 @@ const Product = require("../models/product");
 const Order = require('../models/order');
 
 exports.getIndexPage = (req, res, next) => {
-  // const isLoggedIn = req.get('Cookie').split('=')[1];
-  
   // res.setHeader('Set-Cookie','loggedIn=false');
-
   Product
     .find()
     .then((data) => {
@@ -14,6 +11,7 @@ exports.getIndexPage = (req, res, next) => {
         pageTitle: "Home",
         path: "/",
         isAuthenticated: req.session.isLoggedIn,
+        // csrfToken: req.csrfToken()
       });
     })
     .catch((err) => {
@@ -129,10 +127,10 @@ exports.postOrder = (req, res, next) => {
       });
       const order = new Order({
         user: {
-          name: req.user.name,
           email: req.user.email,
           address: req.user.address,
           userId: req.user,
+          // password: "NULL"
         },
         products: products,
       });
