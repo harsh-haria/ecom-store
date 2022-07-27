@@ -19,13 +19,13 @@
 
                 <label for="details">Description</label>
                 <textarea name="details" id="details" rows="5"><% if(editing){ %><%= product.details %><% } %></textarea>
+            </div>
             
                 <% if(editing){ %>
                     <input type="hidden" name="productId" value="<%= product._id %>">
                 <% } %>
                 
-            
-            </div>
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
 
             <button class="btn" type="submit">
                 <% if(editing){ %>

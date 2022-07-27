@@ -9,9 +9,7 @@ exports.getIndexPage = (req, res, next) => {
       res.render("shop/index", {
         product: data,
         pageTitle: "Home",
-        path: "/",
-        isAuthenticated: req.session.isLoggedIn,
-        // csrfToken: req.csrfToken()
+        path: "/"
       });
     })
     .catch((err) => {
@@ -28,7 +26,7 @@ exports.getProducts = (req, res, next) => {
     // .select('title price -_id ')
     // .populate('userId','name address') //without this the userId will be printed as it is. with this we can get other data associated along with the userID
     .then((data) => {
-      console.log(data);
+      // console.log(data);
       res.render("shop/product-list", {
         product: data,
         pageTitle: "All Products",

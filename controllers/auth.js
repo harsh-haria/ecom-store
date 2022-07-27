@@ -6,7 +6,6 @@ exports.getLogin = (req, res, next) => {
     pageTitle: "Login",
     path: "/login",
     isAuthenticated: false,
-    csrfToken: req.csrfToken()
   });
 };
 
