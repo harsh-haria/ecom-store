@@ -5,7 +5,6 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const express = require("express");
 const bodyParser = require('body-parser');
 const csrf = require('csurf');
-const cookieParser = require('cookie-parser');
 
 const MONGODB_URI = require('./util/database');
 
@@ -23,7 +22,7 @@ const store = new MongoDBStore({
   uri: MONGODB_URI.uri,
   collection: 'sessions'
 });
-var csrfProtection = csrf({ cookie: true });
+var csrfProtection = csrf();
 
 //for ejs
 app.set('view engine','ejs');
@@ -41,7 +40,7 @@ app.use(
     store: store
   })
 );
-app.use(cookieParser());
+app.use(csrfProtection);
 
 app.use( (req,res,next) => {
   if(!req.session.user){
@@ -56,18 +55,18 @@ app.use( (req,res,next) => {
 });
 
 app.use((req,res,next)=>{
-  res.locals.isAuthenticated = req.session.isAuthenticated;
-  // res.locals.csrfToken = req.csrfToken();
+  res.locals.isAuthenticated = req.session.isLoggedIn;
+  res.locals.csrfToken = req.csrfToken();
   next();
 });
 
-app.use('/admin', csrfProtection,adminRoutes);
+app.use('/admin',adminRoutes);
 
-app.use(csrfProtection,shopRoutes);
+app.use(shopRoutes);
 
-app.use(csrfProtection,authRoutes);
+app.use(authRoutes);
 
-app.use(csrfProtection,ErrorController.errorPage);
+app.use(ErrorController.errorPage);
 
 mongoose
   .connect(MONGODB_URI.uri)

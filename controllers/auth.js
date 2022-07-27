@@ -26,12 +26,11 @@ exports.postLogin = (req, res, next) => {
             req.session.user = user;
             req.session.isLoggedIn = true;
             return req.session.save((err) => {
-              //mongodb might take some miliseconds to update.
-              //this helps us to hold operations until everything is saved and only then redirect
-              console.log(err);
+              // console.log(err);
               res.redirect("/");
             });
           }
+
           return res.redirect("/login");
         })
         .catch((err) => console.log(err));
