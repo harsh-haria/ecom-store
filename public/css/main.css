@@ -211,6 +211,22 @@ ul {
   color: white;
 }
 
+.user-message{
+  margin: auto;
+  width: 90%;
+  border: 1px solid #0221ce;
+  padding: 0.5rem;
+  border-radius: 6px;
+  background: #97a5f7;
+  text-align: center;
+}
+
+.user-message--error{
+  border-color: red;
+  background-color: #f78a8a;
+  color: red;
+}
+
 @media (min-width: 768px) {
   .main-header__nav {
     display: flex;
@@ -218,5 +234,9 @@ ul {
 
   #side-menu-toggle {
     display: none;
+  }
+
+  .user-message{
+    width: 30rem;
   }
 }
