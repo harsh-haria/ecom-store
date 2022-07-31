@@ -1,7 +1,7 @@
 const Product = require("../models/product");
 
 exports.AdminProducts = (req, res, next) => {
-  Product.find()
+  Product.find({userId: req.user._id})
     .then((data) => {
       res.render("admin/products", {
         prods: data,
@@ -74,23 +74,27 @@ exports.getEditProductPage = (req, res, next) => {
 exports.postEditProduct = (req,res,next) => {
   Product.findById(req.body.productId)
     .then((product) => {
+      if(product.userId.toString() !== req.user._id.toString()){
+        return res.redirect('/');
+      }
       product.title = req.body.title;
       product.imageUrl = req.body.imageUrl;
       product.price = req.body.price;
       product.details = req.body.details;
 
-      return product.save();
+      return product.save().then((result) => {
+        console.log("Product with id: " + req.body.productId + " was updated");
+        res.redirect("/admin/products");
+      });
     })
-    .then((result) => {
-      console.log("Product with id: " + req.body.productId + " was updated");
-      res.redirect("/admin/products");
-    })
+    
     .catch((err) => {
       console.log(err);
     });
 };
 
 exports.postDeleteProduct = (req,res,next) => {
+  Product.deleteOne({_id:req.body.productId, userId:req.user._id})
   Product.findByIdAndDelete(req.body.productId)
     .then(() => {
       console.log('Product with id:'+req.body.productId+ ' has been deleted');

@@ -7,17 +7,13 @@
     <%- include('../includes/navigation.ejs') %>
     <main>
         
-        <form class="login-form" action="/login" method="POST">
+        <form class="login-form" action="/reset" method="POST">
             <div class="form-control">
                 <label for="email">Email ID</label>
                 <input type="text" name="email" id="email">
-
-                <label for="password">Password</label>
-                <input type="password" name="password" id="password">
             </div>
             <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <button class="btn" type="submit">Login</button>
-            <a href="/reset">Forgot Password?</a>
+            <button class="btn" type="submit">Reset Password</button>
             <br>
             
         </form>
