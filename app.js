@@ -49,11 +49,19 @@ app.use( (req,res,next) => {
     return next();
   }
   User.findById(req.session.user._id)
-    .then(user => {
+    .then((user) => {
+      if (!user) {
+        return next();
+      }
       req.user = user;
       next();
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      // throw new Error(err); //this will just throw an error and reloading sign will be on loop
+      //rather than this we can use next and wrap this error inside the next to avoid such situations
+      next(new Error(err)); 
+      //btw this is just for async. for sync it will directly work and go to /500
+    });
 });
 
 app.use((req,res,next)=>{
@@ -68,7 +76,21 @@ app.use(shopRoutes);
 
 app.use(authRoutes);
 
+app.get('/500',ErrorController.get505);
+
 app.use(ErrorController.errorPage);
+
+app.use((error,req,res,next) => {
+  // res.status(error.httpStatusCode).render(...);
+  // res.redirect('/500');
+  res
+    .status(500)
+    .render("500", {
+      pageTitle: "ERROR!",
+      path: "/500",
+      isAuthenticated: req.session.isLoggedIn
+    });
+});
 
 mongoose
   .connect(MONGODB_URI.uri)

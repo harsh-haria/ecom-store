@@ -12,15 +12,16 @@ exports.getIndexPage = (req, res, next) => {
         path: "/",
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
 
 exports.getProducts = (req, res, next) => {
-  // const isLoggedIn = req.get('Cookie').split(';')[1].trim().split('=')[1];
-  // const isLoggedIn = req.get('Cookie').split('=')[1];
   Product
     .find() //with find we can also use another method select() or unselect()
     // .select('title price -_id ')
@@ -33,16 +34,16 @@ exports.getProducts = (req, res, next) => {
         path: "/products"
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
 
 exports.getProduct = (req, res, next) => {
-  // const isLoggedIn = req.get('Cookie').split(';')[1].trim().split('=')[1];
-  // const isLoggedIn = req.get('Cookie').split('=')[1];
-
   const prodId = req.params.productId;
   Product.findById(prodId)
     .then(products => {
@@ -52,15 +53,16 @@ exports.getProduct = (req, res, next) => {
         product: products
       });
     })
-    .catch((err) => {
-      console.log(err);
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
 
 exports.getCart = (req, res, next) => {
-  // const isLoggedIn = req.get('Cookie').split(';')[1].trim().split('=')[1];
-  // const isLoggedIn = true;
   req.user
     .populate('cart.items.productId')
     .then(user => {
@@ -71,7 +73,12 @@ exports.getCart = (req, res, next) => {
         prods: products
       });
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -84,6 +91,12 @@ exports.postCart = (req, res, next) => {
     .then(result => {
       console.log(result);
       res.redirect('/cart');
+    })
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
     });
 };
 
@@ -95,7 +108,12 @@ exports.postCartDeleteProduct = (req, res, post) => {
     .then(result => {
       res.redirect('/cart');
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -108,7 +126,12 @@ exports.getOrders = (req, res, next) => {
         orders: orders
       });
     })
-    .catch((err) => console.log(err));
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
 
@@ -137,6 +160,11 @@ exports.postOrder = (req, res, next) => {
     .then( () => {
       res.redirect("/orders");
     })
-    .catch((err) => console.log(err));
+    .catch(err => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
 };
 
