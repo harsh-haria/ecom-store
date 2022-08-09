@@ -25,9 +25,9 @@ router.post(
         max: 25,
       }),
 
-    body("imageUrl", "Invalid Image Url!")
-      .isLength({ min: 3 })
-      .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
+    // body("imageUrl", "Invalid Image Url!")
+    //   .isLength({ min: 3 })
+    //   .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
 
     body("price", "Invalid price!").isFloat({min:0}),
 
@@ -56,11 +56,11 @@ router.post(
         max: 25,
       }),
 
-    body("imageUrl", "Invalid Image Url!")
-      .isLength({ min: 3 })
-      .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
+    // body("imageUrl", "Invalid Image Url!")
+    //   .isLength({ min: 3 })
+    //   .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
 
-      body("price", "Invalid price!").isFloat({min:0}),
+    body("price", "Invalid price!").isFloat({min:0}),
 
     body("details", "Details Length should be between 10 and 30!").isLength({
       min: 10,

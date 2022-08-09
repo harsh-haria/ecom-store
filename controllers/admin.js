@@ -36,6 +36,23 @@ exports.getAddProductPage = (req, res, next) => {
 
 exports.postAddProductPage = (req, res, next) => {
   const errors = validationResult(req);
+  const image = req.file;
+  if(!image){
+    return res.status(422).render("admin/edit-product", {
+      pageTitle: "Admin - Add Product",
+      path: "/admin/add-product",
+      editing: false,
+      hasError: true,
+      product: {
+        title: req.body.title,
+        price: req.body.price,
+        details: req.body.details,
+      },
+      errorMessage: 'Attached File is not an Image',
+      validationErrors: [],
+    });
+  }
+  // console.log(req.file);
   if(!errors.isEmpty()){
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Admin - Add Product",
@@ -45,16 +62,18 @@ exports.postAddProductPage = (req, res, next) => {
       hasError: true,
       product: {
         title: req.body.title,
-        imageUrl: req.body.imageUrl,
         price: req.body.price,
         details: req.body.details,
       },
       validationErrors: errors.array(),
     });
   }
+
+  const imageUrl = image.path;
+
   const product = new Product({
     title: req.body.title,
-    imageUrl: req.body.imageUrl,
+    imageUrl: imageUrl,
     price: req.body.price,
     details: req.body.details,
     userId: req.user // the mongoose will pick the userId automatically
@@ -111,6 +130,7 @@ exports.getEditProductPage = (req, res, next) => {
 
 exports.postEditProduct = (req,res,next) => {
   const errors = validationResult(req);
+  const image = req.file;
   if(!errors.isEmpty()){
     return res.status(422).render("admin/edit-product", {
       pageTitle: "Admin - Edit Product",
@@ -120,7 +140,6 @@ exports.postEditProduct = (req,res,next) => {
       hasError: true,
       product: {
         title: req.body.title,
-        imageUrl: req.body.imageUrl,
         price: req.body.price,
         details: req.body.details,
         _id: req.body.productId
@@ -134,7 +153,9 @@ exports.postEditProduct = (req,res,next) => {
         return res.redirect('/');
       }
       product.title = req.body.title;
-      product.imageUrl = req.body.imageUrl;
+      if(image){
+        product.imageUrl = image.path;
+      }
       product.price = req.body.price;
       product.details = req.body.details;
 
