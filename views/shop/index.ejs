@@ -6,32 +6,52 @@
     <%- include('../includes/navigation.ejs') %>
 
     <main>
-        <% if (product.length > 0) { %>
+        <% if (prods.length > 0) { %>
             <div class="grid">
-                <% for (let prods of product) { %>
+                <% for (let p of prods) { %>
                     <article class="card product-item">
                         <header class="card__header">
-                            <h1 class="product__title"><%= prods.title %></h1>
+                            <h1 class="product__title"><%= p.title %></h1>
                         </header>
                         <div class="card__image">
-                            <img class='product-image' src="/<%= prods.imageUrl %>"
-                                alt="<%= prods.title %>">
+                            <img class='product-image' src="/<%= p.imageUrl %>"
+                                alt="<%= p.title %>">
                         </div>
                         <div class="card__content">
-                            <h2 class="product__price">&#8377 <%= prods.price %></h2>
-                            <p class="product__description"><%= prods.details %></p>
+                            <h2 class="product__price">&#8377 <%= p.price %></h2>
+                            <p class="product__description"><%= p.details %></p>
                         </div>
                         <div class="card__actions">
                             <% if(isAuthenticated){ %>
                             <form action="/cart" method="post">
                                 <button class="btn" type="submit">Add to Cart</button>
-                                <input type="hidden" name="productId" value="<%=prods._id%>">
+                                <input type="hidden" name="productId" value="<%=p._id%>">
                                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                             </form>
                             <% } %>
                         </div>
                     </article>
                 <% } %>
+            </div>
+            <div>
+                <section class="pagination">
+                    <% if(currentPage!==1 && previousPage!== 1){ %>
+                        <a href="?page=1">1</a>
+                    <% } %>
+                    <!-- <%if(currentPage===lastPage && totalProducts>3){%>
+                        <a href="?page=1">1</a> ...
+                    <%}%> -->
+                    <% if(hasPreviousPage){ %> 
+                        <a href="?page=<%= previousPage %>"><%= previousPage %></a>
+                    <% } %>
+                        <a href="?page=<%= currentPage %>" class="active"><%= currentPage %></a>
+                    <% if(hasNextPage){ %> 
+                        <a href="?page=<%= nextPage %>"><%= nextPage %></a>
+                    <% } %>
+                    <% if(lastPage!==currentPage && nextPage!==lastPage){ %>
+                        ... <a href="?page=<%= lastPage %>"><%= lastPage %></a>
+                    <% } %>
+                </section>
             </div>
         <% } else { %>
             <h1>No Products Found!</h1>

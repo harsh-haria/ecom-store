@@ -21,7 +21,9 @@
                 <li class="main-header__item">
                     <form action="/logout" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                        <button type="submit">Logout</button>
+                        <button class="main-header__item" type="submit">Logout</button>
+                        <!-- <a class="main-header__item" href="/logout">Logout</a> -->
+                        <!-- <a class="<%= path === '/login' ? 'active': ''  %>" href="/logout">Logout</a> -->
                     </form>
                 </li>
             <% }else{ %>
@@ -69,10 +71,11 @@
             </li>
         <% } else { %>
             <li class="mobile-nav__item">
-                <form action="/logout" method="post">
+                <!-- <form action="/logout" method="post">
                     <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button type="submit">Logout</button>
-                </form>
+                </form> -->
+                <a class="<%= path === '/login' ? 'active': ''  %>" href="/login">Login</a>
             </li>
         <% } %>
     </ul>
