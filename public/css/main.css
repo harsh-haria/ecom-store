@@ -164,6 +164,20 @@ form {
   padding: 1rem;
 }
 
+.order_grid{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+
+.order_card{
+  box-shadow: 0 2px 8px #ffa600;
+  margin:5px;
+  padding: 0.5rem;
+  width: 40rem;
+}
+
 ul {
   list-style-type: none;
 }

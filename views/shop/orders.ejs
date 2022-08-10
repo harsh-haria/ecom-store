@@ -2,15 +2,17 @@
 </head>
 <body>
     <%- include('../includes/navigation.ejs') %>
-    <main>
+    <main class="order_grid">
         <% if(orders.length>0){%>
-            <ul>
+            <ul >
                 <% orders.forEach(order => { %>
-                    <div class="card">
+                    <div class="order_card centered">
                         <li>
-                            <h1>
-                                #<%= order._id %>
-                            </h1>
+                            <h3>
+                                Order: #<%= order._id %>
+                                - 
+                                <a href="/orders/<%= order._id %>">Invoice</a>
+                            </h3>
                             <ul>
                                 <% order.products.forEach(p => { %>
                                     <li><%= p.product.title %> (<%= p.quantity %>) </li>
