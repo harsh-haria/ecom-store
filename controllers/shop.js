@@ -1,6 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 
+const stripeKey = require("../util/database").stripeSecretKey;
+
+const stripe = require("stripe")(stripeKey);
+
 const PDFDocument = require("pdfkit");
 
 const Product = require("../models/product");
@@ -30,10 +34,10 @@ exports.getIndexPage = (req, res, next) => {
         totalProducts: totalItems,
         currentPage: page,
         hasNextPage: ITEMS_PER_PAGE * page < totalItems,
-        hasPreviousPage: page>1,
-        nextPage: page+1,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
         previousPage: page - 1,
-        lastPage: Math.ceil(totalItems/ITEMS_PER_PAGE)
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE),
       });
     })
     .catch((err) => {
@@ -134,6 +138,55 @@ exports.postCartDeleteProduct = (req, res, post) => {
     });
 };
 
+exports.getCheckout = (req, res, next) => {
+  let total;
+  let products;
+  req.user
+    .populate("cart.items.productId")
+    .then((user) => {
+      total = 0;
+      products = user.cart.items;
+      products.forEach((p) => {
+        total += p.quantity * p.productId.price;
+      });
+      return stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: products.map(p => {
+          return {
+            
+            price_data: {
+              currency: 'inr',
+              unit_amount: p.productId.price * 100,
+              product_data: {
+                name: p.productId.title,
+                description: p.productId.details,
+              },
+            },
+            quantity: p.quantity,
+          };
+        }),
+        mode: 'payment',
+        success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
+        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+      });
+    })
+    .then((session) => {
+      res.render("shop/checkout", {
+        pageTitle: "Checkout",
+        path: "/checkout",
+        products: products,
+        totalSum: total,
+        sessionId: session.id
+      });
+    })
+    .catch((err) => {
+      console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
 exports.getOrders = (req, res, next) => {
   Order.find({ "user.userId": req.user._id })
     .then((orders) => {
@@ -226,7 +279,8 @@ exports.getInvoice = (req, res, next) => {
               prod.product.title +
               "   ->   " +
               prod.quantity +
-              "   X   " + "$" + 
+              "   X   " +
+              "$" +
               prod.product.price,
             {
               align: "center",
@@ -237,7 +291,7 @@ exports.getInvoice = (req, res, next) => {
       pdfDoc.fontSize(26).text("---------------------------------------", {
         align: "center",
       });
-      pdfDoc.fontSize(18).text("Total Price: $"+ totalPrice, {
+      pdfDoc.fontSize(18).text("Total Price: $" + totalPrice, {
         align: "center",
       });
 
