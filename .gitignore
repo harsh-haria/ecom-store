@@ -8,7 +8,6 @@ input.txt
 /node_modules
 .gitignore
 /util/database.js
-/util/email.js
 temp_acc.txt
 /old_files
 /assignments
