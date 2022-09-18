@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 
+const { validationResult } = require("express-validator");
+
 const stripeKey = require("../util/database").stripeSecretKey;
 
 const stripe = require("stripe")(stripeKey);
@@ -9,10 +11,11 @@ const PDFDocument = require("pdfkit");
 
 const Product = require("../models/product");
 const Order = require("../models/order");
+const Comment = require("../models/comment");
 
 const rootdir = require("../util/path");
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 3;
 
 exports.getIndexPage = (req, res, next) => {
   // res.setHeader('Set-Cookie','loggedIn=false');
@@ -70,12 +73,97 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
+  let comments;
+  // Comment.find({ prodId: prodId })
+  //   .then((data) => {
+  //     comments = data;
+  //   })
+  //   .catch((err) => {
+  //     // console.log(err);
+  //     const error = new Error(err);
+  //     error.httpStatusCode = 500;
+  //     return next(error);
+  //   });
   Product.findById(prodId)
     .then((products) => {
       res.render("shop/product-detail", {
         pageTitle: products.title,
         path: "/product-details",
         product: products,
+        comments: comments,
+        hasError: false,
+        errorMessage: "",
+        validationErrors: [],
+      });
+    })
+    .catch((err) => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+};
+
+exports.addComment = async (req, res, next) => {
+  const errors = validationResult(req);
+  const prodId = req.params.productId;
+  let returnProduct;
+  let comments;
+  try {
+    returnProduct = await Product.findById(prodId);
+  } catch (err) {
+    // console.log(err);
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
+
+  const rating = req.body.rating;
+  const comment = req.body.activeComment;
+  const returnValues = {
+    rating: rating,
+    comment: comment,
+  };
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("shop/product-detail", {
+      pageTitle: returnProduct.title,
+      path: "/products",
+      product: returnProduct,
+      hasError: true,
+      returnValues: returnValues,
+      errorMessage: errors.array()[0].msg,
+      validationErrors: errors.array(),
+    });
+  }
+
+  //add the review
+  const setComment = new Comment({
+    productId: prodId,
+    comment: comment,
+    rating: rating,
+  });
+  setComment
+    .save()
+    .then((result) => {
+      console.log("Comment saved!");
+    })
+    .catch((err) => {
+      // console.log(err);
+      const error = new Error(err);
+      error.httpStatusCode = 500;
+      return next(error);
+    });
+  Product.findById(prodId)
+    .then((products) => {
+      res.render("shop/product-detail", {
+        pageTitle: products.title,
+        path: "/product-details",
+        product: products,
+        comments: comments,
+        hasError: false,
+        errorMessage: "",
+        validationErrors: [],
       });
     })
     .catch((err) => {
@@ -106,6 +194,7 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
+  console.log("posting into the cart!");
   const prodId = req.body.productId;
   Product.findById(prodId)
     .then((product) => {
@@ -150,12 +239,11 @@ exports.getCheckout = (req, res, next) => {
         total += p.quantity * p.productId.price;
       });
       return stripe.checkout.sessions.create({
-        payment_method_types: ['card'],
-        line_items: products.map(p => {
+        payment_method_types: ["card"],
+        line_items: products.map((p) => {
           return {
-            
             price_data: {
-              currency: 'inr',
+              currency: "inr",
               unit_amount: p.productId.price * 100,
               product_data: {
                 name: p.productId.title,
@@ -165,9 +253,10 @@ exports.getCheckout = (req, res, next) => {
             quantity: p.quantity,
           };
         }),
-        mode: 'payment',
-        success_url: req.protocol + '://' + req.get('host') + '/checkout/success',
-        cancel_url: req.protocol + '://' + req.get('host') + '/checkout/cancel'
+        mode: "payment",
+        success_url:
+          req.protocol + "://" + req.get("host") + "/checkout/success",
+        cancel_url: req.protocol + "://" + req.get("host") + "/checkout/cancel",
       });
     })
     .then((session) => {
@@ -176,7 +265,7 @@ exports.getCheckout = (req, res, next) => {
         path: "/checkout",
         products: products,
         totalSum: total,
-        sessionId: session.id
+        sessionId: session.id,
       });
     })
     .catch((err) => {
@@ -280,7 +369,7 @@ exports.getInvoice = (req, res, next) => {
               "   ->   " +
               prod.quantity +
               "   X   " +
-              "$" +
+              "Rs." +
               prod.product.price,
             {
               align: "center",
@@ -291,33 +380,11 @@ exports.getInvoice = (req, res, next) => {
       pdfDoc.fontSize(26).text("---------------------------------------", {
         align: "center",
       });
-      pdfDoc.fontSize(18).text("Total Price: $" + totalPrice, {
+      pdfDoc.fontSize(18).text("Total Price: Rs." + totalPrice, {
         align: "center",
       });
 
       pdfDoc.end();
-      //the method below is used when files are really small.
-      //this method loads the entire file in memory and then sends it
-      // consider other methods for large files
-      // fs.readFile(invoicePath, (err, data) => {
-      //   if (err) {
-      //     return next(err);
-      //   }
-      //   res.setHeader("Content-Type", "application/pdf");
-      //   res.setHeader(
-      //     "Content-Disposition",
-      //     'inline; filename="' + invoiceName + '"'
-      //   );
-      //   res.send(data);
-      // });
-
-      //here small bits are passed to the browser as soon as we read them.
-      //no need to wait for all the data to come and then concatinate for sending.
-      //as soon as data is received it is send to the browser and then browser can concatinate.
-      // const file = fs.createReadStream(invoicePath);
-      // res.setHeader('Content-Type','application/pdf');
-      // res.setHeader('Content-Disposition', 'inline; filename="'+ invoiceName +'"');
-      // file.pipe(res); //res is a writeable stream vid330
     })
     .catch((err) => console.log(err));
 };

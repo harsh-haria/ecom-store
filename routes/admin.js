@@ -30,7 +30,7 @@ router.post(
     //   .isLength({ min: 3 })
     //   .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
 
-    body("price", "Invalid price!").isFloat({min:0}),
+    body("price", "Invalid price!").isFloat({ min: 0 }),
 
     body("details", "Details Length should be between 10 and 30!").isLength({
       min: 10,
@@ -61,7 +61,7 @@ router.post(
     //   .isLength({ min: 3 })
     //   .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
 
-    body("price", "Invalid price!").isFloat({min:0}),
+    body("price", "Invalid price!").isFloat({ min: 0 }),
 
     body("details", "Details Length should be between 10 and 30!").isLength({
       min: 10,
@@ -73,9 +73,9 @@ router.post(
 );
 
 //this was used when we had synced requests
-// router.post("/delete-product", isAuth, AdminController.postDeleteProduct); 
+// router.post("/delete-product", isAuth, AdminController.postDeleteProduct);
 
 //deleting product in async way
-router.delete('/product/:productId', isAuth, AdminController.deleteProduct);
+router.delete("/product/:productId", isAuth, AdminController.deleteProduct);
 
 module.exports = router;

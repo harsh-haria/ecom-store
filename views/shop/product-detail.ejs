@@ -1,21 +1,67 @@
 <%- include('../includes/head.ejs',{pageTitle:pageTitle})%>
+    <link rel="stylesheet" href="/css/forms.css">
+    <link rel="stylesheet" href="/css/product.css">
 </head>
+
+<style>
+    .verticalLine {
+        border-right: 4px solid #4b42f5;
+        height: auto;
+      }
+</style>
+
 <body>
     <%- include('../includes/navigation.ejs') %>
     <main align="center" >
         <!-- <h1>Product Details</h1> -->
         <h1><%= pageTitle %></h1>
         <hr>
-        <div>
-            <img class="main-header__image" src="/<%= product.imageUrl %>" alt="<%= product.title %>">
+        <div style="display:block; width:100%;">
+            <div style="width:50%; float: left; display: inline-block;">
+                <div>
+                    <img class="main-header__image" style="height:20rem" src="/<%= product.imageUrl %>" alt="<%= product.title %>">
+                </div>
+                <h2> &#8377 <%= product.price %>
+                </h2>
+                <p>
+                    <%= product.details %>
+                </p>
+                <% if(isAuthenticated){%>
+                    <form action="/cart" method="post">
+                        <button class="btn" type="submit">Add to Cart</button>
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <input type="hidden" name="productId" value="<%=product._id%>">
+                    </form>
+                    <% } %>
+            </div>
         </div>
-        <h2> &#8377 <%= product.price %></h2>
-        <p><%= product.details %></p>
-        <% if(isAuthenticated){%>
-        <form action="/cart" method="post">
-            <button class="btn" type="submit">Add to Cart</button>
-            <input type="hidden" name="productId" value="<%=product._id%>">
-        </form>
-        <% } %>
+        
+        <div class="verticalLine" ></div>
+        <div style=" width:50%; float: left; display: inline-block;">
+            <div style="height:470px;overflow:auto;">
+                <form class="product-form" action="/comment/<%=product._id%>" method="POST">
+                    <div class="form-control">
+                        <label for="activeComment">Review:</label>
+                        <input type="text" name="activeComment" id="activeComment" class="<%= validationErrors.find(e => e.param === 'activeComment')? 'invalid': '' %>" value="<% if(hasError){ %><%= returnValues.comment %><% } %>">
+                        <br>
+                        <label for="rating">Rating:</label>
+                        <input type="number" name="rating" id="rating" step="1" class="<%= validationErrors.find(e => e.param === 'rating')? 'invalid': '' %>" value="<% if(hasError){ %><%= returnValues.rating %><% } %>">
+
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+
+                        <br>
+
+                        <button class="btn" type="submit">Add Review</button>
+                    </div>
+                </form>
+                <% if(errorMessage){%>
+                <div class="user-message user-message--error">
+                    <!-- <h5 style="color: red;"> <place error message here> </h5> -->
+                    <%= errorMessage %>
+                </div>
+                <% } %>
+            </div>   
+        </div>
+        
     </main>
 <%- include('../includes/end.ejs') %>

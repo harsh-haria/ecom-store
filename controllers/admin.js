@@ -72,13 +72,14 @@ exports.postAddProductPage = (req, res, next) => {
   }
 
   const imageUrl = image.path;
-
+  console.log("ImageUrl is: " + imageUrl);
   const product = new Product({
     title: req.body.title,
     imageUrl: imageUrl,
     price: req.body.price,
     details: req.body.details,
-    userId: req.user, // the mongoose will pick the userId automatically
+    userId: req.user,
+    rating: 0, // the mongoose will pick the userId automatically
   });
   product
     .save()
@@ -87,7 +88,7 @@ exports.postAddProductPage = (req, res, next) => {
       res.redirect("/admin/products");
     })
     .catch((err) => {
-      // console.log(err);
+      console.log(err);
       // res.redirect('/500');
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -191,9 +192,7 @@ exports.deleteProduct = (req, res, next) => {
       });
     })
     .then((result) => {
-      console.log(
-        "Product with id:" + prodId + " has been deleted"
-      );
+      console.log("Product with id:" + prodId + " has been deleted");
       // console.log(result);
       res.status(200).json({ message: "Success!" });
     })

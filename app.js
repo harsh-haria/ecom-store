@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
+const { v4: uuidv4 } = require("uuid"); //FOR WINDOWS ONLY
 
 const MONGODB_URI = require("./util/database");
 
@@ -31,9 +32,11 @@ const fileStorage = multer.diskStorage({
     cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().toISOString() + "--" + file.originalname);
+    // cb(null, new Date().toISOString() + "-" + file.originalname);
+    cb(null, uuidv4());
   },
 });
+
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype === "image/png" ||
@@ -54,9 +57,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
+app.use(express.static(path.join(__dirname, "temp")));
 app.use(express.static(path.join(__dirname, "public"))); //we can add multiple static folders
 // the app will go through all the folders until it hits the first file which is needed
-app.use('/images',express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use(
   session({
@@ -106,8 +110,10 @@ app.get("/500", ErrorController.get505);
 app.use(ErrorController.errorPage);
 
 app.use((error, req, res, next) => {
+  console.log(error);
   // res.status(error.httpStatusCode).render(...);
   // res.redirect('/500');
+  // res.locals.csrfToken = req.csrfToken();
   res.status(500).render("500", {
     pageTitle: "ERROR!",
     path: "/500",

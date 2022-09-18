@@ -6,15 +6,15 @@
 }
 
 .product-item {
-    width: 20rem;
+    text-align: center;
+    width: 17rem;
     max-width: 95%;
     margin-bottom: 1rem;
 
 }
 
 .product-image{
-    max-height: 22rem;
-    min-height: 22rem;
+    max-width: 10rem;
     padding: 10px;
     border-radius: 16px;
 }

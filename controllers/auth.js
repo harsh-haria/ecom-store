@@ -21,7 +21,7 @@ exports.getLogin = (req, res, next) => {
     isAuthenticated: false,
     errorMessage: message,
     oldInput: { email: "", password: "" },
-    validationErrors: []
+    validationErrors: [],
   });
 };
 
@@ -61,7 +61,7 @@ exports.postLogin = (req, res, next) => {
               res.redirect("/");
             });
           }
-          return res.status(422).render('auth/login', {
+          return res.status(422).render("auth/login", {
             pageTitle: "Login",
             path: "/login",
             errorMessage: "Invalid Email or Password! o_O",
@@ -71,7 +71,7 @@ exports.postLogin = (req, res, next) => {
         })
         .catch((err) => console.log(err));
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -145,19 +145,19 @@ exports.postSignup = (req, res, next) => {
           email: emailer.emailHost,
         },
         subject: "Signup Completed!",
-        text: "Congratulations!. You are now successfully registered on SmartShoper",
+        text: "Congratulations!. You are now successfully registered on SmartShoper!",
         html: `<h1>Congratulations!</h1>
               <br>
-              <p>${email}, you are now successfully registered on SmartShoper. </p>`,
+              <p>${email}, you are now successfully registered on SmartShoper! </p>`,
       };
       return emailer.setup
         .send(message)
         .then((response) => {
-          console.log("Email sent");
+          // console.log("Email sent");
         })
         .catch((err) => console.log(err));
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -225,7 +225,7 @@ exports.postReset = (req, res, next) => {
           })
           .catch((err) => console.log(err));
       })
-      .catch(err => {
+      .catch((err) => {
         // console.log(err);
         const error = new Error(err);
         error.httpStatusCode = 500;
@@ -252,7 +252,7 @@ exports.getNewPassword = (req, res, next) => {
         passwordToken: token,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
@@ -283,7 +283,7 @@ exports.postNewPassword = (req, res, next) => {
     .then((result) => {
       res.redirect("/login");
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       const error = new Error(err);
       error.httpStatusCode = 500;
