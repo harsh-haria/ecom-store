@@ -73,27 +73,22 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodId = req.params.productId;
-  let comments;
-  // Comment.find({ prodId: prodId })
-  //   .then((data) => {
-  //     comments = data;
-  //   })
-  //   .catch((err) => {
-  //     // console.log(err);
-  //     const error = new Error(err);
-  //     error.httpStatusCode = 500;
-  //     return next(error);
-  //   });
-  Product.findById(prodId)
-    .then((products) => {
-      res.render("shop/product-detail", {
-        pageTitle: products.title,
-        path: "/product-details",
-        product: products,
-        comments: comments,
-        hasError: false,
-        errorMessage: "",
-        validationErrors: [],
+  let comments = [];
+  Comment.find({ productId: prodId })
+    .then((data) => {
+      comments = data;
+    })
+    .then(() => {
+      Product.findById(prodId).then((products) => {
+        res.render("shop/product-detail", {
+          pageTitle: products.title,
+          path: "/product-details",
+          product: products,
+          comments: comments,
+          hasError: false,
+          errorMessage: "",
+          validationErrors: [],
+        });
       });
     })
     .catch((err) => {
@@ -126,52 +121,65 @@ exports.addComment = async (req, res, next) => {
   };
 
   if (!errors.isEmpty()) {
-    return res.status(422).render("shop/product-detail", {
-      pageTitle: returnProduct.title,
-      path: "/products",
-      product: returnProduct,
-      hasError: true,
-      returnValues: returnValues,
-      errorMessage: errors.array()[0].msg,
-      validationErrors: errors.array(),
-    });
-  }
-
-  //add the review
-  const setComment = new Comment({
-    productId: prodId,
-    comment: comment,
-    rating: rating,
-  });
-  setComment
-    .save()
-    .then((result) => {
-      console.log("Comment saved!");
-    })
-    .catch((err) => {
-      // console.log(err);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-    });
-  Product.findById(prodId)
-    .then((products) => {
-      res.render("shop/product-detail", {
-        pageTitle: products.title,
-        path: "/product-details",
-        product: products,
-        comments: comments,
-        hasError: false,
-        errorMessage: "",
-        validationErrors: [],
+    Comment.find({ productId: prodId })
+      .then((data) => {
+        return data;
+      })
+      .then((data) => {
+        return res.status(422).render("shop/product-detail", {
+          pageTitle: returnProduct.title,
+          path: "/products",
+          product: returnProduct,
+          hasError: true,
+          returnValues: returnValues,
+          errorMessage: errors.array()[0].msg,
+          validationErrors: errors.array(),
+          comments: data,
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
       });
-    })
-    .catch((err) => {
-      // console.log(err);
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
+  }
+  //add the review
+  if (errors.isEmpty()) {
+    const setComment = new Comment({
+      productId: prodId,
+      comment: comment,
+      rating: rating,
     });
+    setComment
+      .save()
+      .then((result) => {
+        console.log("Comment saved!");
+        res.redirect("/products/" + prodId);
+      })
+      // .then((saved) => {
+      //   return Product.findById(prodId);
+      // })
+      // .then((products) => {
+      // console.log("sending the page!");
+      // res.render("shop/product-detail", {
+      //   pageTitle: "Comment added " + products.title,
+      //   path: "/product-details",
+      //   product: products,
+      //   comments: comments,
+      //   hasError: false,
+      //   errorMessage: "",
+      //   validationErrors: [],
+      // });
+      // res.redirect("/products/" + prodId);
+      // })
+      .catch((err) => {
+        console.log(err);
+        const error = new Error(err);
+        error.httpStatusCode = 500;
+        return next(error);
+      });
+  }
 };
 
 exports.getCart = (req, res, next) => {
