@@ -1,42 +1,41 @@
 <%- include('../includes/head.ejs',{pageTitle:pageTitle}) %>
-    <link rel="stylesheet" href="/css/product.css">
+    <!-- <link rel="stylesheet" href="/css/product.css"> -->
 </head>
 
 <body>
     <%- include('../includes/navigation.ejs') %>
-
-    <main>
+    <div class="container-fluid text-center">
         <% if (product.length> 0) { %>
-            <div class="grid">
+            <div class="row row-cols-1 row-cols-md-3 g-4">
                 <% for (let prods of product) { %>
-                    <article class="card product-item">
-                        <header class="card__header">
-                            <h1 class="product__title">
-                                <%= prods.title %>
-                            </h1>
-                        </header>
-                        <div class="card__image">
-                            <img class='product-image' src="/<%= prods.imageUrl %>" alt="<%= prods.title %>">
+                    <div class="col">
+                        <div class="card text-center mx-auto" style="width: 65%">
+                            <img class='img-fluid img-thumbnail rounded mx-auto' src="/<%= prods.imageUrl %>"
+                                alt="<%= prods.title %>">
+                            <div class="card-body">
+                                <h3 class="card-title">
+                                    <%= prods.title %>
+                                </h3>
+                                <h5 class="card-title">
+                                    <%= prods.price %>
+                                </h5>
+                                <p class="card-text">
+                                    <%= prods.details %>
+                                </p>
+                                <div>
+                                    <a href="/products/<%= prods._id %>" class="btn btn-outline-info">Details</a>
+                                    <% if(isAuthenticated){ %>
+                                        <%- include('../includes/add-to-cart.ejs',{prods:prods}) %>
+                                            <% } %>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card__content">
-                            <h2 class="product__price"> &#8377
-                                <%= prods.price %>
-                            </h2>
-                            <p class="product__description">
-                                <%= prods.details %>
-                            </p>
-                        </div>
-                        <div class="card__actions">
-                            <a href="/products/<%= prods._id %>" class="btn">Details</a>
-                            <% if(isAuthenticated){ %>
-                                <%- include('../includes/add-to-cart.ejs',{prods:prods}) %>
-                            <% } %>
-                        </div>
-                    </article>
+                    </div>
                     <% } %>
             </div>
             <% } else { %>
                 <h1>No Products Found!</h1>
                 <% } %>
-    </main>
+    </div>
+
 <%- include('../includes/end.ejs') %>

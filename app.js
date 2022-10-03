@@ -127,8 +127,8 @@ mongoose
     console.log("connected!");
     app.listen(3000);
   })
-  // .catch((err) => console.log(err));
-  .catch((err) => {
-    const error = new Error(err);
-    next(error);
-  });
+  .catch((err) => console.log(err));
+// .catch((err) => {
+//   const error = new Error(err);
+//   next(error);
+// });
