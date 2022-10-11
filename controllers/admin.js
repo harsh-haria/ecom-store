@@ -1,9 +1,13 @@
 const Product = require("../models/product");
 const mongoose = require("mongoose");
 
+const cloudinary = require("../util/cloudinary");
+const upload = require("../util/multer");
+
 const { validationResult } = require("express-validator/check");
 
 const fileHelper = require("../util/file");
+const { CURSOR_FLAGS } = require("mongodb");
 
 exports.AdminProducts = (req, res, next) => {
   Product.find({ userId: req.user._id })
@@ -36,7 +40,7 @@ exports.getAddProductPage = (req, res, next) => {
   });
 };
 
-exports.postAddProductPage = (req, res, next) => {
+exports.postAddProductPage = async (req, res, next) => {
   const errors = validationResult(req);
   const image = req.file;
   if (!image) {
@@ -73,30 +77,29 @@ exports.postAddProductPage = (req, res, next) => {
 
   const imageUrl = image.path;
   console.log("ImageUrl is: " + imageUrl);
-  const product = new Product({
-    title: req.body.title,
-    imageUrl: imageUrl,
-    price: req.body.price,
-    details: req.body.details,
-    userId: req.user,
-    rating: 0, // the mongoose will pick the userId automatically
-  });
-  product
-    .save()
-    .then((result) => {
-      console.log("Product creation complete");
-      res.redirect("/admin/products");
-    })
-    .catch((err) => {
-      console.log(err);
-      // res.redirect('/500');
-      const error = new Error(err);
-      error.httpStatusCode = 500;
-      return next(error);
-      //we can trigger the above code manually as well by-
-      //including this piece of text in the code
-      //throw new Error('<any text here>'); this will directly goto the above code
+
+  try {
+    const result = await cloudinary.uploader.upload(imageUrl);
+    // console.log(result);
+    const product = new Product({
+      title: req.body.title,
+      imageUrl: result.secure_url,
+      price: req.body.price,
+      details: req.body.details,
+      userId: req.user,
+      rating: 0, // the mongoose will pick the userId automatically
     });
+    const productSaver = product.save();
+    console.log("Product creation complete");
+    res.redirect("/admin/products");
+    fileHelper.deleletFile(imageUrl);
+  } catch (err) {
+    console.log(err);
+    // res.redirect('/500');
+    const error = new Error(err);
+    error.httpStatusCode = 500;
+    return next(error);
+  }
 };
 
 exports.getEditProductPage = (req, res, next) => {

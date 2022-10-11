@@ -3,13 +3,16 @@ const path = require("path");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const express = require("express");
+const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
 const csrf = require("csurf");
 const flash = require("connect-flash");
 const multer = require("multer");
 const { v4: uuidv4 } = require("uuid"); //FOR WINDOWS ONLY
 
-const MONGODB_URI = require("./util/database");
+dotenv.config();
+
+// const MONGODB_URI = require("./util/database");
 
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
@@ -22,7 +25,7 @@ const User = require("./models/user");
 const app = express();
 
 const store = new MongoDBStore({
-  uri: MONGODB_URI.uri,
+  uri: process.env.MONGO_URI,
   collection: "sessions",
 });
 var csrfProtection = csrf();
@@ -122,7 +125,7 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect(MONGODB_URI.uri)
+  .connect(process.env.MONGO_URI)
   .then((result) => {
     console.log("connected!");
     app.listen(3000);

@@ -5,7 +5,7 @@
 - [x] Authentication
 - [x] Validation
 - [x] Implement Comments in product detail page
-- [] (imp) add images link rather than full image
+- [x] (imp) add images link rather than full image
 - [] Add Star System for product cards
 - [] Update the website design with bootstrap
 - [] Admin login page -> view all orders and mark them completed!

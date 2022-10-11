@@ -57,7 +57,7 @@ router.post(
         max: 25,
       }),
 
-    // body("imageUrl", "Invalid Image Url!")
+    // body("image", "Image size should be less than 2MB!").is
     //   .isLength({ min: 3 })
     //   .isURL({ validate_length: true, protocols: ["http", "https", "ftp"] }),
 
