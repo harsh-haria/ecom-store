@@ -6,41 +6,42 @@
         <%- include('../includes/navigation.ejs') %>
 
             <main>
-                <% if (prods.length > 0) { %>
-                    <div class="grid">
+                <div class="container-fluid text-center">
+                    <% if (prods.length > 0) { %>
+                    <div class="row row-cols-1 row-cols-md-3 g-4">
                         <% for (let product of prods) { %>
-                            <article class="card product-item">
-                                <header class="card__header">
-                                    <h1 class="product__title">
-                                        <%= product.title %>
-                                    </h1>
-                                </header>
-                                <div class="card__image">
-                                    <img class='product-image' src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                            
+                            <div class="col">
+                                <div class="card text-center mx-auto" style="width: 65%">
+                                    <img class='img-fluid img-thumbnail rounded mx-auto' src="<%= product.imageUrl %>" alt="<%= product.title %>">
+                                    <div class="card-body">
+                                        <h3 class="card-title">
+                                            <%= product.title %>
+                                        </h3>
+                                        <h5 class="card-title">
+                                            <%= product.price %>
+                                        </h5>
+                                        <p class="card-text">
+                                            <%= product.details %>
+                                        </p>
+                                        <div>
+                                            <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn">Edit</a>
+                                            <!-- <form action="/admin/delete-product" method="POST"> -->
+                                            <input type="hidden" name="productId" value="<%= product._id %>">
+                                            <input type="hidden" name="title" value="<%= product.title %>">
+                                            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                            <button class="btn" type="button" onclick="testerHello(this)">Delete</button>
+                                            <!-- </form> -->
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="card__content">
-                                    <h2 class="product__price">&#8377
-                                        <%= product.price %>
-                                    </h2>
-                                    <p class="product__description">
-                                        <%= product.details %>
-                                    </p>
-                                </div>
-                                <div class="card__actions">
-                                    <a href="/admin/edit-product/<%= product._id %>?edit=true" class="btn">Edit</a>
-                                    <!-- <form action="/admin/delete-product" method="POST"> -->
-                                    <input type="hidden" name="productId" value="<%= product._id %>">
-                                    <input type="hidden" name="title" value="<%= product.title %>">
-                                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                                    <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
-                                    <!-- </form> -->
-                                </div>
-                            </article>
+                            </div>
                             <% } %>
                     </div>
                     <% } else { %>
                         <h1>No Products Found!</h1>
                         <% } %>
+                </div>
             </main>
             <%- include('../includes/end.ejs') %>
             <script src="/js/admin.js"></script>
