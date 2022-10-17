@@ -1,4 +1,9 @@
 <%- include('../includes/head.ejs',{pageTitle:pageTitle})%>
+<style>
+    .boxe{
+        background-color: rebeccapurple;
+    }
+</style>
 </head>
 <body>
     <%- include('../includes/navigation.ejs') %>
@@ -28,4 +33,15 @@
             <h1>Nothing to show here :)</h1>
         <% } %>
     </main>
+    <!-- <div class="container text-center">
+        <% if(orders.length>0){%>
+            <div class="row justify-content-md-center">
+                <% orders.forEach(order=> { %>
+                    <div class="col-md-8 boxe">column1</div>
+                <%});%>
+            </div>
+        <% }else{ %>
+            <h1>Nothing to show here :)</h1>
+        <% } %>
+    </div> -->
 <%- include('../includes/end.ejs') %>

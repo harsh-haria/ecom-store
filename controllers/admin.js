@@ -177,6 +177,7 @@ exports.postEditProduct = async (req, res, next) => {
     await product.save();
     console.log("Product with id: " + req.body.productId + " was updated");
     res.redirect("/admin/products");
+    fileHelper.deleletFile(image.path);
   } catch (err) {
     console.log(err);
     const error = new Error(err);

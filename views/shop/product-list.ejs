@@ -16,7 +16,7 @@
                                 <h3 class="card-title">
                                     <%= prods.title %>
                                 </h3>
-                                <h5 class="card-title">
+                                <h5 class="card-title">&#8377
                                     <%= prods.price %>
                                 </h5>
                                 <p class="card-text">
@@ -26,7 +26,7 @@
                                     <a href="/products/<%= prods._id %>" class="btn btn-outline-info">Details</a>
                                     <% if(isAuthenticated){ %>
                                         <%- include('../includes/add-to-cart.ejs',{prods:prods}) %>
-                                            <% } %>
+                                    <% } %>
                                 </div>
                             </div>
                         </div>
