@@ -12,6 +12,10 @@ const productSchema = new Schema({
     type: String,
     required: true,
   },
+  cloudinary_id: {
+    type: String,
+    required: true,
+  },
   price: {
     type: Number,
     required: true,
