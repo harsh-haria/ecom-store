@@ -1,11 +1,13 @@
 # Ecommerce Store
 
-**\*** work in progress **\***
-
 Building a Ecommerce Store where an Admin can Create, Read, Update and Delete a product. A User can view product's details, Add products to cart and order the products in the cart. The project uses MVC architecture and has all the general functionality of a traditional ecommerce website like CRUD on products along with payments, Invoice generation, authentication and validation, etc.
 
+Further iterative enhancements added in [todo.md](https://github.com/harsh-haria/ecom-store/blob/master/todo.md)
+
 ---
+
 ## Prerequisite
+
 - [NodeJs](https://nodejs.org/en/) (to run the project)
 - [MongoDB](https://account.mongodb.com/account/login) Account (for storing everything except the media)
 - [Cloduinary](https://cloudinary.com/) Account (for storing the media)
@@ -16,7 +18,11 @@ Building a Ecommerce Store where an Admin can Create, Read, Update and Delete a 
 
 ## Procedure to run the project:
 
-1. Download the .zip file and extract the contents into a folder. <br>
+1. Clone this repository using the command below
+
+```
+git clone https://github.com/harsh-haria/ecom-store.git
+```
 
 2. Open that folder into your favourite text editor and in command line type and run **'npm install'**. This will install all the necessary node modules that are required for this project to run smoothly.<br>
 
@@ -43,11 +49,12 @@ CLOUDINARY_API_SECRET = <cloudinary_api_secret>
    a) Open the MongoDB Atlas and click on 'New Connection+' button on top left.<br>
    b) Enter the stored Link in the 'URI' section and click on connect.<br>
    c) If you have added some products into the database you will see 'shops' in the menu on the left side. Click on it to explore the different collections we have inserted in the database.<br>
-   
+
 8. All the media is stored in Cloudinary platform. To view all the media uploaded go the [Cloudinary website](https://cloudinary.com/) and follow the steps below.<br>
-   a) Go to the Clodinary Website.<br>
-   b) After you signin, you will see a Menu on the top. Search for 'Media Library' and click on it.<br>
+   a) Go to the Cloudinary Website.<br>
+   b) After you Signin, you will see a Menu on the top. Search for 'Media Library' and click on it.<br>
    c) Here you will be able to see all the media uploaded by all the users under 'Assests' section.<br>
 
-
 ###### If you have any doubts regarding the installation of this project feel free to contact me and I'll help you get through the installation and running this project.
+
+###### If you have any suggestions, please let me know :)

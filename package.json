@@ -1,7 +1,7 @@
 {
-  "name": "first-project",
+  "name": "smartshopper",
   "version": "1.0.0",
-  "description": "first project in Node Js",
+  "description": "ecommerce-store",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

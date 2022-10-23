@@ -1,4 +1,4 @@
-## #TodoList for this project [Ecom-Store](https://github.com/harsh-haria/ecom-store.git)
+## #Future Enhancements for this project [Ecom-Store](https://github.com/harsh-haria/ecom-store.git)
 
 - [x] Basic CRUD on products
 - [x] Create a db and make basic functionality work
