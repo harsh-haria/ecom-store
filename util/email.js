@@ -1,13 +1,14 @@
-const nodeMailer = require('nodemailer');
-const sgMail = require('@sendgrid/mail');
+const nodeMailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
-const database = require('./database');
+const dotenv = require("dotenv");
+dotenv.config();
 
-sgMail.setApiKey(database.emailApiKey);
+sgMail.setApiKey(process.env.EMAIL_API_KEY);
 
-const emailHost = database.masterEmail;
+const emailHost = process.env.MASTER_EMAIL;
 
 module.exports = {
-    setup: sgMail,
-    emailHost : emailHost
-}
+  setup: sgMail,
+  emailHost: emailHost,
+};

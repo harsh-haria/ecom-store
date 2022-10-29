@@ -12,8 +12,6 @@ const { v4: uuidv4 } = require("uuid"); //FOR WINDOWS ONLY
 
 dotenv.config();
 
-// const MONGODB_URI = require("./util/database");
-
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");

@@ -17,7 +17,7 @@ router.post(
       .isEmail()
       .withMessage("Email seems to be in incorrect format")
       .normalizeEmail(),
-    
+
     body("password", "Password isn't in valid format :3")
       .isLength({ min: 5 })
       .isAlphanumeric()
@@ -44,10 +44,12 @@ router.post(
         return User.findOne({ email: value }).then((userDoc) => {
           if (userDoc) return Promise.reject("User already Exists!");
         });
-      })
-      .normalizeEmail(),
+      }),
 
-    body("address", "Address Invalid. Max Characters 99").isLength({min:1,max:99}),
+    body("address", "Address Invalid. Max Characters 99").isLength({
+      min: 1,
+      max: 99,
+    }),
 
     body(
       "password",
@@ -57,7 +59,8 @@ router.post(
       .isAlphanumeric()
       .trim(),
 
-    body("confirmPassword").trim()
+    body("confirmPassword")
+      .trim()
       .custom((value, { req }) => {
         if (value !== req.body.password) {
           throw new Error("Passwords should match!");

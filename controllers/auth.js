@@ -105,6 +105,7 @@ exports.getSignup = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
   const email = req.body.email;
+  console.log(email);
   const address = req.body.address;
   const password = req.body.password;
   const errors = validationResult(req);
@@ -153,7 +154,7 @@ exports.postSignup = (req, res, next) => {
       return emailer.setup
         .send(message)
         .then((response) => {
-          // console.log("Email sent");
+          console.log("Email sent");
         })
         .catch((err) => console.log(err));
     })

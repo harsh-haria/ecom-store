@@ -3,9 +3,10 @@ const path = require("path");
 
 const { validationResult } = require("express-validator");
 
-const stripeKey = require("../util/database").stripeSecretKey;
+const dotenv = require("dotenv");
+dotenv.config();
 
-const stripe = require("stripe")(stripeKey);
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const PDFDocument = require("pdfkit");
 
