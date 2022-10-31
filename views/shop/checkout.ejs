@@ -3,7 +3,7 @@
 <body>
     <%- include('../includes/navigation.ejs') %>
     <main>
-        <ul class="cart__item-list">
+        <ul>
             <%for(let p of products){%>
                 <li class="card cart__item product-item card__content">
                     Product: <%= p.productId.title %> <br>
@@ -12,11 +12,12 @@
                 </li>
             <% } %>
         </ul>
+        <hr style="size: 100%;">
         <div>
             <h2>Total : <%= totalSum %> </h2>
         </div>
         <div class="centered">
-            <button id="order-btn" class="btn">ORDER</button>
+            <button id="order-btn" class="btn btn-outline-success">ORDER</button>
             <script src="https://js.stripe.com/v3/"></script>
             <script>
                 var stripe = Stripe('pk_test_51LXOdBSFlaKbRGh5MUgSYQF9gsKXkA7Xu8qmGT2RfQmSk1zMofXU7MYHqJXhe36RCluEq2xPAYrhE1aVkaTITDhi00Br8Dpo9h')

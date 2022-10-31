@@ -9,14 +9,27 @@
     <%- include('../includes/navigation.ejs') %>
     <main class="order_grid">
         <% if(orders.length>0){%>
-            <ul >
+            <ul>
                 <% orders.forEach(order => { %>
-                    <div class="order_card centered">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Order: #<%= order._id %>-
+                                <a href="/orders/<%= order._id %>" target="_blank" rel="noopener">Invoice</a>
+                            </h4>
+                            <h6 class="card-subtitle mb-2 text-muted">Order Items:</h6>
+                            <% order.products.forEach(p=> { %>
+                                <p>
+                                    Title: "<%= p.product.title %>", Quantity: "<%= p.quantity %>"
+                                </p>
+                            <% }); %>
+                        </div>
+                    </div>
+                    <!-- <div class="card centered">
                         <li>
                             <h3>
                                 Order: #<%= order._id %>
                                 - 
-                                <a href="/orders/<%= order._id %>">Invoice</a>
+                                <a href="/orders/<%= order._id %>" target="_blank" rel="noopener">Invoice</a>
                             </h3>
                             <ul>
                                 <% order.products.forEach(p => { %>
@@ -24,7 +37,7 @@
                                 <% }); %>
                             </ul>
                         </li>
-                    </div>
+                    </div> -->
                     <br>
                 <% }); %>
             </ul>

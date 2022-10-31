@@ -33,7 +33,7 @@ exports.getIndexPage = (req, res, next) => {
     .then((products) => {
       res.render("shop/index", {
         prods: products,
-        pageTitle: "Shop",
+        pageTitle: "Smart Shopper",
         path: "/",
         totalProducts: totalItems,
         currentPage: page,
@@ -203,14 +203,13 @@ exports.getCart = (req, res, next) => {
 };
 
 exports.postCart = (req, res, next) => {
-  console.log("posting into the cart!");
   const prodId = req.body.productId;
   Product.findById(prodId)
     .then((product) => {
       return req.user.addToCart(product);
     })
     .then((result) => {
-      console.log(result);
+      // console.log(result);
       res.redirect("/cart");
     })
     .catch((err) => {
@@ -354,7 +353,7 @@ exports.getInvoice = (req, res, next) => {
         "Content-Disposition",
         'inline; filename="' + invoiceName + '"'
       );
-      pdfDoc.pipe(fs.createWriteStream(invoicePath)); //stores the file in server as well
+      // pdfDoc.pipe(fs.createWriteStream(invoicePath)); //stores the file in server as well
       pdfDoc.pipe(res); //send to client as well in res writable stream.
       //now lets generate the document!
       //pdfkit.org to check the documentation
