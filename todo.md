@@ -5,10 +5,11 @@
 - [x] Authentication
 - [x] Validation
 - [x] Implement Comments in product detail page
-- [x] (imp) add images link rather than full image
+- [x] (imp) add image links rather than full images from local files
+- [x] Improve card design
+- [x] Update the website design with bootstrap
+- [x] Improve cart and orders page
 - [] Add Star System for product cards
-- [] Update the website design with bootstrap
 - [] Admin login page -> view all orders and mark them completed!
-- [] Improve cart and orders page
+- [] Chat feature between admin and user using websockets for any disputes
 - [] Improve invoice generation
-- [] Improve card design
