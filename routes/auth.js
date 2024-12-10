@@ -20,7 +20,6 @@ router.post(
 
     body("password", "Password isn't in valid format :3")
       .isLength({ min: 5 })
-      .isAlphanumeric()
       .trim(),
   ],
   authController.postLogin
@@ -56,7 +55,6 @@ router.post(
       "Please enter a password that is atlesat 5 characters long and is alphaNumeric"
     )
       .isLength({ min: 5 })
-      .isAlphanumeric()
       .trim(),
 
     body("confirmPassword")
