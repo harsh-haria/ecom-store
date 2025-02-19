@@ -1,6 +1,6 @@
 # [Ecommerce Store](https://turfoff.com)
 
-Building a Ecommerce Store where an Admin can Create, Read, Update and Delete a product. A User can view product's details, Add products to cart and order the products in the cart. The project uses MVC architecture and has all the general functionality of a traditional ecommerce website like CRUD on products along with payments, Invoice generation, authentication and validation, etc.
+Built a Ecommerce Store where an Admin can Create, Read, Update and Delete a product. A User can view product's details, Add products to cart and order the products in the cart. The project uses MVC architecture and has all the general functionality of a traditional ecommerce website like CRUD on products along with payments, Invoice generation, authentication and validation, etc.
 
 You can check out the website over [here](https://smartshopecomm.herokuapp.com/)
 
